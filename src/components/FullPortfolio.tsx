@@ -16,7 +16,7 @@ const FullPortfolio = ({ data }: FullPortfolioProps) => {
   const createItem = (item: any) => (
     <Link key={item.id} to={`/${item.fields.Path}`}>
       <div style={{ textAlign: "center" }}>
-        <Display shadow style={{ marginBottom: -20 }}>
+        <Display shadow style={{ marginBottom: -25, width: "90%" }}>
           <img
             alt={`${item.fields.Name} Cover`}
             src={

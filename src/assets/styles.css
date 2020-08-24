@@ -52,7 +52,7 @@
   grid-gap: 0 10px;
 }
 
-@media (max-width: 350px) {
+@media (max-width: 390px) {
   .grid {
     grid-template-columns: repeat(auto-fit, 100%);
   }
