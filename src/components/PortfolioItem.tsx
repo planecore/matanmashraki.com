@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { Display, Button } from "@geist-ui/react"
+import { Display, Button, Row } from "@geist-ui/react"
 import { useParams } from "react-router-dom"
 import NotFound from "../pages/NotFound"
 import ReactMarkdown from "react-markdown"
@@ -78,7 +78,11 @@ const PortfolioItem = ({ data }: PortfolioItemProps) => {
       </Link>
       {createItem(item)}
       {createButtons(item)}
-      <ReactMarkdown source={item.fields.Content} />
+      <Row justify="center">
+        <div style={{ width: "90%" }}>
+          <ReactMarkdown source={item.fields.Content} />
+        </div>
+      </Row>
     </div>
   ) : (
     <NotFound />
