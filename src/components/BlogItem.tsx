@@ -23,7 +23,7 @@ const BlogItem = ({ data }: BlogItemProps) => {
       <Display shadow style={{ marginBottom: -10 }}>
         <img
           width={525}
-          alt={`${item.fields.Name} Cover`}
+          alt={`${item.fields.Title} Cover`}
           src={
             item.fields.Attachments.find(
               (elem: any) => elem.filename === "Cover.png"

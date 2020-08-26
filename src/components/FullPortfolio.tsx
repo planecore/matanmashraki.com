@@ -36,13 +36,7 @@ const FullPortfolio = ({ data }: FullPortfolioProps) => {
     </Link>
   )
 
-  return (
-    <div className="grid">
-      {data
-        .sort((a: any, b: any) => a.fields.Order > b.fields.Order)
-        .map((item: any) => createItem(item))}
-    </div>
-  )
+  return <div className="grid">{data.map((item: any) => createItem(item))}</div>
 }
 
 export default FullPortfolio

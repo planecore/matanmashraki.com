@@ -21,8 +21,8 @@ import {
 } from "@geist-ui/react-icons"
 
 const Home = () => {
-  const portfolio = useAirtable("Portfolio")
-  const blog = useAirtable("Blog")
+  const portfolio = useAirtable("Portfolio", 6)
+  const blog = useAirtable("Blog", 6)
   const { type } = useTheme()
 
   useEffect(() => {
@@ -157,12 +157,9 @@ const Home = () => {
             marginTop: -40,
           }}
         >
-          {portfolio.data
-            .sort((a: any, b: any) => a.fields.Order > b.fields.Order)
-            .slice(0, 10)
-            .map((item: any, index: number) =>
-              createPortfolioItem(item, index)
-            )}
+          {portfolio.data.map((item: any, index: number) =>
+            createPortfolioItem(item, index)
+          )}
         </Row>
       )}
     </>
@@ -230,10 +227,9 @@ const Home = () => {
             marginTop: -40,
           }}
         >
-          {blog.data
-            .sort((a: any, b: any) => a.fields.Order < b.fields.Order)
-            .slice(0, 10)
-            .map((item: any, index: number) => createBlogItem(item, index))}
+          {blog.data.map((item: any, index: number) =>
+            createBlogItem(item, index)
+          )}
         </Row>
       )}
     </>

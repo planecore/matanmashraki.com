@@ -19,7 +19,7 @@ const FullBlog = ({ data }: FullBlogProps) => {
     <div style={{ textAlign: "center" }}>
       <Display shadow style={{ marginBottom: -25, width: "90%" }}>
         <img
-          alt={`${item.fields.Name} Cover`}
+          alt={`${item.fields.Title} Cover`}
           src={
             item.fields.Attachments.find(
               (elem: any) => elem.filename === "Cover.png"
@@ -44,7 +44,7 @@ const FullBlog = ({ data }: FullBlogProps) => {
       <Col span={10}>
         <Display shadow>
           <img
-            alt={`${item.fields.Name} Cover`}
+            alt={`${item.fields.Title} Cover`}
             src={
               item.fields.Attachments.find(
                 (elem: any) => elem.filename === "Cover.png"
@@ -75,9 +75,7 @@ const FullBlog = ({ data }: FullBlogProps) => {
 
   return (
     <div className={width < 700 ? "grid" : ""}>
-      {data
-        .sort((a: any, b: any) => a.fields.Order < b.fields.Order)
-        .map((item: any) => createItem(item))}
+      {data.map((item: any) => createItem(item))}
     </div>
   )
 }
