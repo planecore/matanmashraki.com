@@ -8,6 +8,7 @@ import {
   Display,
   Description,
   useTheme,
+  Image,
 } from "@geist-ui/react"
 import Emoji from "../components/Emoji"
 import useAirtable from "../hooks/useAirtable"
@@ -107,8 +108,9 @@ const Home = () => {
         }}
       >
         <Display style={{ marginBottom: -10 }}>
-          <img
-            width={320}
+          <Image
+            width={250}
+            height={167}
             alt={`${item.fields.Name} Cover`}
             src={
               item.fields.Attachments.find(
@@ -177,8 +179,9 @@ const Home = () => {
         }}
       >
         <Display style={{ marginBottom: -10 }}>
-          <img
-            width={320}
+          <Image
+            width={250}
+            height={167}
             alt={`${item.fields.Name} Cover`}
             src={
               item.fields.Attachments.find(

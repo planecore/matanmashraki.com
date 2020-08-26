@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { Display, Button, Row } from "@geist-ui/react"
+import { Display, Button, Row, Image } from "@geist-ui/react"
 import { useParams } from "react-router-dom"
 import NotFound from "../pages/NotFound"
 import ReactMarkdown from "react-markdown"
@@ -21,8 +21,9 @@ const PortfolioItem = ({ data }: PortfolioItemProps) => {
   const createItem = (item: any) => (
     <div style={{ textAlign: "center" }}>
       <Display shadow style={{ marginBottom: -20 }}>
-        <img
+        <Image
           width={525}
+          height={351}
           alt={`${item.fields.Name} Cover`}
           src={
             item.fields.Attachments.find(
@@ -37,7 +38,7 @@ const PortfolioItem = ({ data }: PortfolioItemProps) => {
   )
 
   const createButtons = (item: any) => (
-    <div style={{ textAlign: "center", marginBottom: 30 }}>
+    <div style={{ textAlign: "center", marginBottom: 30, marginTop: 20 }}>
       {item.fields.PrimaryButton && (
         <a
           target="_blank"

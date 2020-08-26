@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { Display, useTheme, Row, Col, Text } from "@geist-ui/react"
+import { Display, useTheme, Row, Col, Text, Image } from "@geist-ui/react"
 import { Link } from "react-router-dom"
 import useScreenSize from "../hooks/useScreenSize"
 
@@ -18,7 +18,9 @@ const FullBlog = ({ data }: FullBlogProps) => {
   const createSmallItem = (item: any) => (
     <div style={{ textAlign: "center" }}>
       <Display shadow style={{ marginBottom: -25, width: "90%" }}>
-        <img
+        <Image
+          width={426}
+          height={285}
           alt={`${item.fields.Title} Cover`}
           src={
             item.fields.Attachments.find(
@@ -43,7 +45,9 @@ const FullBlog = ({ data }: FullBlogProps) => {
     <Row gap={0.8} align="middle">
       <Col span={10}>
         <Display shadow>
-          <img
+          <Image
+            width={375}
+            height={250}
             alt={`${item.fields.Title} Cover`}
             src={
               item.fields.Attachments.find(

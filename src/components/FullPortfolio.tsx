@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { Display, useTheme } from "@geist-ui/react"
+import { Display, useTheme, Image } from "@geist-ui/react"
 import { Link } from "react-router-dom"
 
 type FullPortfolioProps = {
@@ -17,7 +17,9 @@ const FullPortfolio = ({ data }: FullPortfolioProps) => {
     <Link key={item.id} to={`/${item.fields.Path}`}>
       <div style={{ textAlign: "center" }}>
         <Display shadow style={{ marginBottom: -25, width: "90%" }}>
-          <img
+          <Image
+            width={426}
+            height={285}
             alt={`${item.fields.Name} Cover`}
             src={
               item.fields.Attachments.find(

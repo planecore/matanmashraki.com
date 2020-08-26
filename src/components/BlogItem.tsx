@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { Display, Button, Text, Row } from "@geist-ui/react"
+import { Display, Button, Text, Row, Image } from "@geist-ui/react"
 import { useParams } from "react-router-dom"
 import NotFound from "../pages/NotFound"
 import ReactMarkdown from "react-markdown/with-html"
@@ -21,8 +21,9 @@ const BlogItem = ({ data }: BlogItemProps) => {
   const createItem = (item: any) => (
     <div style={{ textAlign: "center" }}>
       <Display shadow style={{ marginBottom: -10 }}>
-        <img
+        <Image
           width={525}
+          height={351}
           alt={`${item.fields.Title} Cover`}
           src={
             item.fields.Attachments.find(
