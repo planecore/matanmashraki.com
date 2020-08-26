@@ -1,7 +1,8 @@
-import React, { useEffect } from "react"
-import { Display, useTheme, Row, Col, Text, Image } from "@geist-ui/react"
+import React, { useEffect, useState } from "react"
+import { useTheme, Row, Col, Text, Spinner } from "@geist-ui/react"
 import { Link } from "react-router-dom"
 import useScreenSize from "../hooks/useScreenSize"
+import ImageDisplay from "./ImageDisplay"
 
 type FullBlogProps = {
   data: any
@@ -10,25 +11,32 @@ type FullBlogProps = {
 const FullBlog = ({ data }: FullBlogProps) => {
   const { type } = useTheme()
   const { width } = useScreenSize()
+  const [showView, setShowView] = useState(false)
 
   useEffect(() => {
     document.title = "Matan Mashraki | Blog"
   }, [])
 
+  useEffect(() => {
+    setInterval(() => {
+      setShowView(true)
+    }, 25)
+  }, [])
+
+  const getImageFor = (item: any) =>
+    item.fields.Attachments.find((elem: any) => elem.filename === "Cover.png")
+      .thumbnails.large
+
   const createSmallItem = (item: any) => (
     <div style={{ textAlign: "center" }}>
-      <Display shadow style={{ marginBottom: -25, width: "90%" }}>
-        <Image
-          width={426}
-          height={285}
-          alt={`${item.fields.Title} Cover`}
-          src={
-            item.fields.Attachments.find(
-              (elem: any) => elem.filename === "Cover.png"
-            ).thumbnails.large.url
-          }
-        />
-      </Display>
+      <ImageDisplay
+        style={{ marginBottom: -25 }}
+        alt={`${item.fields.Title} Cover`}
+        gridWidth={300}
+        height={getImageFor(item).height}
+        width={getImageFor(item).width}
+        src={getImageFor(item).url}
+      />
       <Text h5 type="secondary">
         {item.fields.Date}
       </Text>
@@ -44,18 +52,13 @@ const FullBlog = ({ data }: FullBlogProps) => {
   const createBigItem = (item: any) => (
     <Row gap={0.8} align="middle">
       <Col span={10}>
-        <Display shadow>
-          <Image
-            width={375}
-            height={250}
-            alt={`${item.fields.Title} Cover`}
-            src={
-              item.fields.Attachments.find(
-                (elem: any) => elem.filename === "Cover.png"
-              ).thumbnails.large.url
-            }
-          />
-        </Display>
+        <ImageDisplay
+          alt={`${item.fields.Title} Cover`}
+          gridWidth={375}
+          height={getImageFor(item).height}
+          width={getImageFor(item).width}
+          src={getImageFor(item).url}
+        />
       </Col>
       <Col span={20}>
         <Text h5 type="secondary">
@@ -78,9 +81,14 @@ const FullBlog = ({ data }: FullBlogProps) => {
   )
 
   return (
-    <div className={width < 700 ? "grid" : ""}>
-      {data.map((item: any) => createItem(item))}
-    </div>
+    <>
+      <div className="center" style={{ opacity: showView ? 0 : 1 }}>
+        <Spinner size="large" />
+      </div>
+      <div className="grid" style={{ opacity: showView ? 1 : 0 }}>
+        {data.map((item: any) => createItem(item))}
+      </div>
+    </>
   )
 }
 

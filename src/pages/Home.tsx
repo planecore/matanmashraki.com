@@ -96,6 +96,10 @@ const Home = () => {
     </div>
   )
 
+  const getImageFor = (item: any) =>
+    item.fields.Attachments.find((elem: any) => elem.filename === "Cover.png")
+      .thumbnails.large
+
   const createPortfolioItem = (item: any, index: number) => (
     <Link key={item.id} to={`/portfolio/${item.fields.Path}`}>
       <div
@@ -112,11 +116,7 @@ const Home = () => {
             width={250}
             height={167}
             alt={`${item.fields.Name} Cover`}
-            src={
-              item.fields.Attachments.find(
-                (elem: any) => elem.filename === "Cover.png"
-              ).thumbnails.large.url
-            }
+            src={getImageFor(item).url}
           />
         </Display>
         <Description
@@ -183,11 +183,7 @@ const Home = () => {
             width={250}
             height={167}
             alt={`${item.fields.Name} Cover`}
-            src={
-              item.fields.Attachments.find(
-                (elem: any) => elem.filename === "Cover.png"
-              ).thumbnails.large.url
-            }
+            src={getImageFor(item).url}
           />
         </Display>
         <Description
