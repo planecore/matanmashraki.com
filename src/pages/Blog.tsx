@@ -1,19 +1,17 @@
-import React, { useEffect } from "react"
+import React from "react"
 import { Spinner } from "@geist-ui/react"
 import useAirtable from "../hooks/useAirtable"
 import { BrowserRouter as Router, Route } from "react-router-dom"
 import FullBlog from "../components/FullBlog"
 import BlogItem from "../components/BlogItem"
+import createHead from "../support/createHead"
 
 const Blog = () => {
   const { isLoading, data } = useAirtable("Blog")
 
-  useEffect(() => {
-    document.title = "Matan Mashraki | Blog"
-  }, [])
-
   return isLoading ? (
     <div className="center">
+      {createHead("Blog")}
       <Spinner size="large" />
     </div>
   ) : (

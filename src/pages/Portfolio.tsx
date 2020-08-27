@@ -1,19 +1,17 @@
-import React, { useEffect } from "react"
+import React from "react"
 import { Spinner } from "@geist-ui/react"
 import useAirtable from "../hooks/useAirtable"
 import { BrowserRouter as Router, Route } from "react-router-dom"
 import FullPortfolio from "../components/FullPortfolio"
 import PortfolioItem from "../components/PortfolioItem"
+import createHead from "../support/createHead"
 
 const Portfolio = () => {
   const { isLoading, data } = useAirtable("Portfolio")
 
-  useEffect(() => {
-    document.title = "Matan Mashraki | Portfolio"
-  }, [])
-
   return isLoading ? (
     <div className="center">
+      {createHead("Blog")}
       <Spinner size="large" />
     </div>
   ) : (

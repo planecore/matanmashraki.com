@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React from "react"
 import {
   Tag,
   Row,
@@ -20,15 +20,12 @@ import {
   Linkedin,
   Mail,
 } from "@geist-ui/react-icons"
+import createHead from "../support/createHead"
 
 const Home = () => {
   const portfolio = useAirtable("Portfolio", 6)
   const blog = useAirtable("Blog", 6)
   const { type } = useTheme()
-
-  useEffect(() => {
-    document.title = "Matan Mashraki"
-  }, [])
 
   const highlights = (
     <div style={{ marginTop: 25 }}>
@@ -236,6 +233,7 @@ const Home = () => {
 
   return (
     <>
+      {createHead("Home")}
       {main}
       {portfolioPreview}
       {blogPreview}

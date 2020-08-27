@@ -7,6 +7,7 @@ import { Download, Code, ArrowLeft } from "@geist-ui/react-icons"
 import { Link } from "react-router-dom"
 import ImageDisplay from "./ImageDisplay"
 import useScreenWidth from "../hooks/useScreenWidth"
+import createHead from "../support/createHead"
 
 type PortfolioItemProps = {
   data: any
@@ -17,10 +18,6 @@ const PortfolioItem = ({ data }: PortfolioItemProps) => {
   const { screenWidth } = useScreenWidth()
   const [showView, setShowView] = useState(false)
   const item = data.find((item: any) => item.fields.Path === portfolioId)
-
-  useEffect(() => {
-    item && (document.title = `Matan Mashraki | ${item.fields.Name}`)
-  }, [item])
 
   useEffect(() => {
     setInterval(() => {
@@ -79,6 +76,11 @@ const PortfolioItem = ({ data }: PortfolioItemProps) => {
 
   return item ? (
     <>
+      {createHead(
+        item.fields.Name,
+        item.fields.Description,
+        getImageFor(item).url
+      )}
       <div className="center" style={{ opacity: showView ? 0 : 1 }}>
         <Spinner size="large" />
       </div>

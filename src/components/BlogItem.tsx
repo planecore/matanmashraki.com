@@ -7,6 +7,7 @@ import { ArrowLeft } from "@geist-ui/react-icons"
 import { Link } from "react-router-dom"
 import useScreenWidth from "../hooks/useScreenWidth"
 import ImageDisplay from "./ImageDisplay"
+import createHead from "../support/createHead"
 
 type BlogItemProps = {
   data: any
@@ -17,10 +18,6 @@ const BlogItem = ({ data }: BlogItemProps) => {
   const { screenWidth } = useScreenWidth()
   const [showView, setShowView] = useState(false)
   const item = data.find((item: any) => item.fields.Path === blogId)
-
-  useEffect(() => {
-    item && (document.title = `Matan Mashraki | ${item.fields.Title}`)
-  }, [item])
 
   useEffect(() => {
     setInterval(() => {
@@ -55,6 +52,11 @@ const BlogItem = ({ data }: BlogItemProps) => {
 
   return item ? (
     <>
+      {createHead(
+        item.fields.Title,
+        item.fields.Description,
+        getImageFor(item).url
+      )}
       <div className="center" style={{ opacity: showView ? 0 : 1 }}>
         <Spinner size="large" />
       </div>

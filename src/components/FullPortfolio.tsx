@@ -1,8 +1,9 @@
-import React, { useEffect } from "react"
+import React from "react"
 import { useTheme, Spinner } from "@geist-ui/react"
 import { Link } from "react-router-dom"
 import ImageDisplay from "./ImageDisplay"
 import useGridWidth from "../hooks/useGridWidth"
+import createHead from "../support/createHead"
 
 type FullPortfolioProps = {
   data: any
@@ -11,10 +12,6 @@ type FullPortfolioProps = {
 const FullPortfolio = ({ data }: FullPortfolioProps) => {
   const { type } = useTheme()
   const { gridWidth, gridRef } = useGridWidth()
-
-  useEffect(() => {
-    document.title = "Matan Mashraki | Portfolio"
-  }, [])
 
   const getImageFor = (item: any) =>
     item.fields.Attachments.find((elem: any) => elem.filename === "Cover.png")
@@ -44,6 +41,7 @@ const FullPortfolio = ({ data }: FullPortfolioProps) => {
 
   return (
     <>
+      {createHead("Portfolio")}
       <div className="center" style={{ opacity: gridWidth ? 0 : 1 }}>
         <Spinner size="large" />
       </div>

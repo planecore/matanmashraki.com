@@ -10,6 +10,7 @@ import {
   useTheme,
 } from "@geist-ui/react"
 import ReCAPTCHA from "react-google-recaptcha"
+import createHead from "../support/createHead"
 
 const Contact = () => {
   const { type } = useTheme()
@@ -22,10 +23,6 @@ const Contact = () => {
   const [captcha, setCaptcha] = useState<string | null>(null)
   const recaptchaRef = useRef<ReCAPTCHA | null>(null)
   const [loading, setLoading] = useState(false)
-
-  useEffect(() => {
-    document.title = "Matan Mashraki | Contact"
-  }, [])
 
   const onReCAPTCHAChange = (token: string | null) => {
     setCaptcha(token)
@@ -113,6 +110,7 @@ const Contact = () => {
       onSubmit={sendMessage}
       style={{ marginTop: 40, textAlign: "center" }}
     >
+      {createHead("Contact")}
       <Spacer y={0.5} />
       <Input label="Name" width="100%" {...name.bindings} />
       <Spacer y={0.5} />

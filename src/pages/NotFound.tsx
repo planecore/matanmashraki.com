@@ -1,12 +1,10 @@
-import React, { useEffect } from "react"
+import React from "react"
+import createHead from "../support/createHead"
 
 const NotFound = () => {
-  useEffect(() => {
-    document.title = "Matan Mashraki | 404"
-  }, [])
-
   return (
     <div style={{ textAlign: "center", marginTop: 50 }}>
+      {createHead("404")}
       <h2>404</h2>
       <h2>Not Found</h2>
     </div>

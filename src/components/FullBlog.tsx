@@ -3,6 +3,7 @@ import { useTheme, Row, Col, Text, Spinner } from "@geist-ui/react"
 import { Link } from "react-router-dom"
 import useScreenSize from "../hooks/useScreenSize"
 import ImageDisplay from "./ImageDisplay"
+import createHead from "../support/createHead"
 
 type FullBlogProps = {
   data: any
@@ -12,10 +13,6 @@ const FullBlog = ({ data }: FullBlogProps) => {
   const { type } = useTheme()
   const { width } = useScreenSize()
   const [showView, setShowView] = useState(false)
-
-  useEffect(() => {
-    document.title = "Matan Mashraki | Blog"
-  }, [])
 
   useEffect(() => {
     setInterval(() => {
@@ -82,6 +79,7 @@ const FullBlog = ({ data }: FullBlogProps) => {
 
   return (
     <>
+      {createHead("Blog")}
       <div className="center" style={{ opacity: showView ? 0 : 1 }}>
         <Spinner size="large" />
       </div>
