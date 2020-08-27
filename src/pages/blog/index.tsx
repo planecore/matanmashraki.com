@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from "react"
-import { useTheme, Row, Col, Text, Spinner } from "@geist-ui/react"
-import { Link } from "react-router-dom"
-import useScreenSize from "../hooks/useScreenSize"
-import ImageDisplay from "./ImageDisplay"
-import createHead from "../support/createHead"
+import { NextPage } from 'next'
+import { useEffect, useState } from "react"
+import { useTheme, Row, Col, Text } from "@geist-ui/react"
+import Link from "../../components/Link"
+import useScreenSize from "../../hooks/useScreenSize"
+import ImageDisplay from "../../components/ImageDisplay"
+import Head from "../../components/Head"
+import fetchAirtable from '../../hooks/fetchAirtable'
 
 type FullBlogProps = {
   data: any
 }
 
-const FullBlog = ({ data }: FullBlogProps) => {
+const FullBlog: NextPage<FullBlogProps> = ({ data }) => {
   const { type } = useTheme()
   const { width } = useScreenSize()
   const [showView, setShowView] = useState(false)
@@ -72,22 +74,23 @@ const FullBlog = ({ data }: FullBlogProps) => {
   )
 
   const createItem = (item: any) => (
-    <Link key={item.id} to={`/${item.fields.Path}`}>
+    <Link key={item.id} as={`/blog/${item.fields.Path}`} href="/blog/[article]">
       {width < 700 ? createSmallItem(item) : createBigItem(item)}
     </Link>
   )
 
   return (
     <>
-      {createHead("Blog")}
-      <div className="center" style={{ opacity: showView ? 0 : 1 }}>
-        <Spinner size="large" />
-      </div>
+      <Head title="Blog" />
       <div className="grid" style={{ opacity: showView ? 1 : 0 }}>
-        {data.map((item: any) => createItem(item))}
+        {data.records.map((item: any) => createItem(item))}
       </div>
     </>
   )
 }
+
+FullBlog.getInitialProps = async () => ({
+  data: await fetchAirtable("Blog")
+})
 
 export default FullBlog

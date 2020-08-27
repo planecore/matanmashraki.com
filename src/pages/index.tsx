@@ -1,18 +1,15 @@
-import React from "react"
 import {
   Tag,
   Row,
   Col,
   Button,
-  Spinner,
   Display,
   Description,
   useTheme,
   Image,
 } from "@geist-ui/react"
 import Emoji from "../components/Emoji"
-import useAirtable from "../hooks/useAirtable"
-import { Link } from "react-router-dom"
+import Link from "../components/Link"
 import {
   ArrowRight,
   Github,
@@ -20,11 +17,16 @@ import {
   Linkedin,
   Mail,
 } from "@geist-ui/react-icons"
-import createHead from "../support/createHead"
+import Head from "../components/Head"
+import { NextPage, GetStaticProps } from "next"
+import fetchAirtable from "../hooks/fetchAirtable"
 
-const Home = () => {
-  const portfolio = useAirtable("Portfolio", 6)
-  const blog = useAirtable("Blog", 6)
+type HomeProps = {
+  portfolio: any
+  blog: any
+}
+
+const Home: NextPage<HomeProps> = ({ portfolio, blog }) => {
   const { type } = useTheme()
 
   const highlights = (
@@ -73,7 +75,7 @@ const Home = () => {
       >
         <Linkedin color={type === "light" ? "black" : "white"} />
       </a>
-      <Link to="/contact" style={{ margin: 10 }}>
+      <Link href="/contactme" style={{ margin: 10 }}>
         <Mail color={type === "light" ? "black" : "white"} />
       </Link>
     </Row>
@@ -98,7 +100,11 @@ const Home = () => {
       .thumbnails.large
 
   const createPortfolioItem = (item: any, index: number) => (
-    <Link key={item.id} to={`/portfolio/${item.fields.Path}`}>
+    <Link
+      key={item.id}
+      as={`/portfolio/${item.fields.Path}`}
+      href="/portfolio/[item]"
+    >
       <div
         style={{
           textAlign: "left",
@@ -112,12 +118,12 @@ const Home = () => {
           <Image
             width={250}
             height={167}
-            alt={`${item.fields.Name} Cover`}
+            alt={`${item.fields.Title} Cover`}
             src={getImageFor(item).url}
           />
         </Display>
         <Description
-          title={item.fields.Name}
+          title={item.fields.Title}
           content={item.fields.Description}
         />
       </div>
@@ -127,11 +133,11 @@ const Home = () => {
   const portfolioPreview = (
     <>
       <Row style={{ marginTop: 100, zIndex: 50 }}>
-        <Col style={{ marginTop: 3 }}>
+        <Col style={{ marginTop: 4 }}>
           <h4>Portfolio</h4>
         </Col>
         <Col style={{ textAlign: "right" }}>
-          <Link to="/portfolio">
+          <Link href="/portfolio">
             <Button
               type="abort"
               iconRight={<ArrowRight />}
@@ -142,30 +148,24 @@ const Home = () => {
           </Link>
         </Col>
       </Row>
-      {portfolio.isLoading ? (
-        <Row justify="center" align="middle" style={{ height: 280 }}>
-          <Spinner size="large" />
-        </Row>
-      ) : (
-        <Row
-          style={{
-            height: 280,
-            overflow: "auto",
-            marginLeft: -22,
-            marginRight: -22,
-            marginTop: -40,
-          }}
-        >
-          {portfolio.data.map((item: any, index: number) =>
-            createPortfolioItem(item, index)
-          )}
-        </Row>
-      )}
+      <Row
+        style={{
+          height: 280,
+          overflow: "auto",
+          marginLeft: -22,
+          marginRight: -22,
+          marginTop: -40,
+        }}
+      >
+        {portfolio.records.map((item: any, index: number) =>
+          createPortfolioItem(item, index)
+        )}
+      </Row>
     </>
   )
 
   const createBlogItem = (item: any, index: number) => (
-    <Link key={item.id} to={`/blog/${item.fields.Path}`}>
+    <Link key={item.id} as={`/blog/${item.fields.Path}`} href="/blog/[article]">
       <div
         style={{
           textAlign: "left",
@@ -179,7 +179,7 @@ const Home = () => {
           <Image
             width={250}
             height={167}
-            alt={`${item.fields.Name} Cover`}
+            alt={`${item.fields.Title} Cover`}
             src={getImageFor(item).url}
           />
         </Display>
@@ -194,11 +194,11 @@ const Home = () => {
   const blogPreview = (
     <>
       <Row style={{ marginTop: 100, zIndex: 50 }}>
-        <Col style={{ marginTop: 3 }}>
+        <Col style={{ marginTop: 4 }}>
           <h4>Blog</h4>
         </Col>
         <Col style={{ textAlign: "right" }}>
-          <Link to="/blog">
+          <Link href="/blog">
             <Button
               type="abort"
               iconRight={<ArrowRight />}
@@ -209,36 +209,37 @@ const Home = () => {
           </Link>
         </Col>
       </Row>
-      {blog.isLoading ? (
-        <Row justify="center" align="middle" style={{ height: 280 }}>
-          <Spinner size="large" />
-        </Row>
-      ) : (
-        <Row
-          style={{
-            height: 280,
-            overflow: "auto",
-            marginLeft: -22,
-            marginRight: -22,
-            marginTop: -40,
-          }}
-        >
-          {blog.data.map((item: any, index: number) =>
-            createBlogItem(item, index)
-          )}
-        </Row>
-      )}
+      <Row
+        style={{
+          height: 280,
+          overflow: "auto",
+          marginLeft: -22,
+          marginRight: -22,
+          marginTop: -40,
+        }}
+      >
+        {blog.records.map((item: any, index: number) =>
+          createBlogItem(item, index)
+        )}
+      </Row>
     </>
   )
 
   return (
     <>
-      {createHead("Home")}
+      <Head title="Home" />
       {main}
       {portfolioPreview}
       {blogPreview}
     </>
   )
 }
+
+export const getStaticProps: GetStaticProps = async () => ({
+  props: {
+    portfolio: await fetchAirtable("Portfolio", undefined, 6, true),
+    blog: await fetchAirtable("Blog", undefined, 6, true),
+  },
+})
 
 export default Home

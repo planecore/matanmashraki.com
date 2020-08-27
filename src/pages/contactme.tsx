@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, FormEvent, useState } from "react"
+import { useEffect, useRef, FormEvent, useState } from "react"
 import {
   Input,
   Spacer,
@@ -10,9 +10,10 @@ import {
   useTheme,
 } from "@geist-ui/react"
 import ReCAPTCHA from "react-google-recaptcha"
-import createHead from "../support/createHead"
+import { NextPage } from "next"
+import Head from "../components/Head"
 
-const Contact = () => {
+const Contact: NextPage = () => {
   const { type } = useTheme()
   const [, setToast] = useToasts()
   const form = useRef<HTMLFormElement>(null)
@@ -105,46 +106,48 @@ const Contact = () => {
   }
 
   return (
-    <form
-      ref={form}
-      onSubmit={sendMessage}
-      style={{ marginTop: 40, textAlign: "center" }}
-    >
-      {createHead("Contact")}
-      <Spacer y={0.5} />
-      <Input label="Name" width="100%" {...name.bindings} />
-      <Spacer y={0.5} />
-      <Input label="Email Address" width="100%" {...email.bindings} />
-      <Spacer y={0.5} />
-      <Input label="Subject" width="100%" {...subject.bindings} />
-      <Spacer y={0.5} />
-      <Textarea
-        placeholder="Message"
-        width="100%"
-        minHeight="200px"
-        {...message.bindings}
-      />
-      <Spacer y={0.5} />
-      <Row justify="center" style={{ height: 78 }}>
-        <ReCAPTCHA
-          ref={recaptchaRef}
-          sitekey="6LcZksIZAAAAADcDCXHnj67_pB_AWpqEWJv5FCyW"
-          onChange={onReCAPTCHAChange}
-          onExpired={onReCAPTCHAExpired}
-          theme={type}
-        />
-      </Row>
-      <Spacer y={0.5} />
-      <Button
-        loading={loading}
-        shadow
-        type="secondary"
-        htmlType="submit"
-        style={{ width: 304 }}
+    <div>
+      <Head title="Contact" />
+      <form
+        ref={form}
+        onSubmit={sendMessage}
+        style={{ marginTop: 40, textAlign: "center" }}
       >
-        Submit
-      </Button>
-    </form>
+        <Spacer y={0.5} />
+        <Input label="Name" width="100%" {...name.bindings} />
+        <Spacer y={0.5} />
+        <Input label="Email Address" width="100%" {...email.bindings} />
+        <Spacer y={0.5} />
+        <Input label="Subject" width="100%" {...subject.bindings} />
+        <Spacer y={0.5} />
+        <Textarea
+          placeholder="Message"
+          width="100%"
+          minHeight="200px"
+          {...message.bindings}
+        />
+        <Spacer y={0.5} />
+        <Row justify="center" style={{ height: 78 }}>
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            sitekey="6LcZksIZAAAAADcDCXHnj67_pB_AWpqEWJv5FCyW"
+            onChange={onReCAPTCHAChange}
+            onExpired={onReCAPTCHAExpired}
+            theme={type}
+          />
+        </Row>
+        <Spacer y={0.5} />
+        <Button
+          loading={loading}
+          shadow
+          type="secondary"
+          htmlType="submit"
+          style={{ width: 304 }}
+        >
+          Submit
+        </Button>
+      </form>
+    </div>
   )
 }
 

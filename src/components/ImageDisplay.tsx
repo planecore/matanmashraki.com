@@ -41,7 +41,7 @@ const ImageDisplay = ({
         <Display shadow style={style}>
           <Image
             alt={alt}
-            src={`${src}`}
+            src={src}
             width={size.width}
             height={size.height}
           />

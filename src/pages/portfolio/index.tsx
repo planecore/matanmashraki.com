@@ -1,15 +1,16 @@
-import React from "react"
-import { useTheme, Spinner } from "@geist-ui/react"
-import { Link } from "react-router-dom"
-import ImageDisplay from "./ImageDisplay"
-import useGridWidth from "../hooks/useGridWidth"
-import createHead from "../support/createHead"
+import { NextPage } from 'next'
+import { useTheme } from "@geist-ui/react"
+import Link from "../../components/Link"
+import ImageDisplay from "../../components/ImageDisplay"
+import useGridWidth from "../../hooks/useGridWidth"
+import Head from "../../components/Head"
+import fetchAirtable from '../../hooks/fetchAirtable'
 
 type FullPortfolioProps = {
   data: any
 }
 
-const FullPortfolio = ({ data }: FullPortfolioProps) => {
+const FullPortfolio: NextPage<FullPortfolioProps> = ({ data }) => {
   const { type } = useTheme()
   const { gridWidth, gridRef } = useGridWidth()
 
@@ -18,19 +19,19 @@ const FullPortfolio = ({ data }: FullPortfolioProps) => {
       .thumbnails.large
 
   const createItem = (item: any) => (
-    <Link key={item.id} to={`/${item.fields.Path}`}>
+    <Link key={item.id} as={`/portfolio/${item.fields.Path}`} href="/portfolio/[item]">
       <div style={{ textAlign: "center" }}>
         <ImageDisplay
           style={{ marginBottom: -25 }}
           scale={0.9}
-          alt={`${item.fields.Name} Cover`}
+          alt={`${item.fields.Title} Cover`}
           gridWidth={gridWidth ?? 0}
           height={getImageFor(item).height}
           width={getImageFor(item).width}
           src={getImageFor(item).url}
         />
         <h3 style={{ color: type === "light" ? "black" : "white" }}>
-          {item.fields.Name}
+          {item.fields.Title}
         </h3>
         <h5 style={{ color: type === "light" ? "black" : "white" }}>
           {item.fields.Description}
@@ -41,19 +42,20 @@ const FullPortfolio = ({ data }: FullPortfolioProps) => {
 
   return (
     <>
-      {createHead("Portfolio")}
-      <div className="center" style={{ opacity: gridWidth ? 0 : 1 }}>
-        <Spinner size="large" />
-      </div>
+      <Head title="Portfolio" />
       <div
         className="grid"
         ref={gridRef}
         style={{ opacity: gridWidth ? 1 : 0 }}
       >
-        {data.map((item: any) => createItem(item))}
+        {data.records.map((item: any) => createItem(item))}
       </div>
     </>
   )
 }
+
+FullPortfolio.getInitialProps = async () => ({
+  data: await fetchAirtable("Portfolio")
+})
 
 export default FullPortfolio

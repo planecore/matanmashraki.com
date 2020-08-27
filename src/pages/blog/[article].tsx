@@ -1,23 +1,22 @@
-import React, { useEffect, useState } from "react"
-import { Button, Text, Row, Spinner } from "@geist-ui/react"
-import { useParams } from "react-router-dom"
-import NotFound from "../pages/NotFound"
+import { NextPage } from "next"
+import { useEffect, useState } from "react"
+import { Button, Text, Row } from "@geist-ui/react"
+import NotFound from "../../components/NotFound"
 import ReactMarkdown from "react-markdown/with-html"
 import { ArrowLeft } from "@geist-ui/react-icons"
-import { Link } from "react-router-dom"
-import useScreenWidth from "../hooks/useScreenWidth"
-import ImageDisplay from "./ImageDisplay"
-import createHead from "../support/createHead"
+import Link from "../../components/Link"
+import useScreenWidth from "../../hooks/useScreenWidth"
+import ImageDisplay from "../../components/ImageDisplay"
+import Head from "../../components/Head"
+import fetchAirtable from "../../hooks/fetchAirtable"
 
 type BlogItemProps = {
-  data: any
+  item: any
 }
 
-const BlogItem = ({ data }: BlogItemProps) => {
-  const { blogId } = useParams<any>()
+const BlogItem: NextPage<BlogItemProps> = ({ item }) => {
   const { screenWidth } = useScreenWidth()
   const [showView, setShowView] = useState(false)
-  const item = data.find((item: any) => item.fields.Path === blogId)
 
   useEffect(() => {
     setInterval(() => {
@@ -52,16 +51,13 @@ const BlogItem = ({ data }: BlogItemProps) => {
 
   return item ? (
     <>
-      {createHead(
-        item.fields.Title,
-        item.fields.Description,
-        getImageFor(item).url
-      )}
-      <div className="center" style={{ opacity: showView ? 0 : 1 }}>
-        <Spinner size="large" />
-      </div>
+      <Head
+        title={item.fields.Title}
+        desc={item.fields.Description}
+        image={getImageFor(item).url}
+      />
       <div style={{ opacity: showView ? 1 : 0 }}>
-        <Link to="/">
+        <Link href="/blog">
           <Button
             type="abort"
             icon={<ArrowLeft />}
@@ -82,5 +78,9 @@ const BlogItem = ({ data }: BlogItemProps) => {
     <NotFound />
   )
 }
+
+BlogItem.getInitialProps = async (ctx) => ({
+  item: (await fetchAirtable("Blog", ctx.query.article as string)).records[0]
+})
 
 export default BlogItem

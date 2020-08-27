@@ -1,24 +1,21 @@
 import React, { useState, useEffect, createRef, useContext } from "react"
 import { Tabs, useTheme, Row, Select } from "@geist-ui/react"
-import { useLocation, useHistory } from "react-router-dom"
-import logoLight from "../assets/logo-color.svg"
-import logoDark from "../assets/logo-white.svg"
-import { ThemeContextType, ThemeContext } from ".."
+import { useRouter } from "next/router"
+import { ThemeContextType, ThemeContext } from "./Layout"
 import { Sun, Moon, Droplet } from "@geist-ui/react-icons"
 
 const Header = () => {
   const { type } = useTheme()
   const { setThemeMode } = useContext<ThemeContextType>(ThemeContext)
-  const [selectedTheme, setSelectedTheme] = useState<string>(getTheme())
-  const { pathname } = useLocation()
-  const history = useHistory()
+  const [selectedTheme, setSelectedTheme] = useState<string>("auto")
+  const { pathname, push } = useRouter()
   const [path, setPath] = useState(pathname)
   const headerRef = createRef<HTMLDivElement>()
   const [base, setBase] = useState(calculateBase(pathname))
 
   useEffect(() => {
-    if (history.location.pathname !== path) history.push(path)
-  }, [path, history])
+    if (pathname !== path) push(path)
+  }, [path])
 
   useEffect(() => {
     const ref = headerRef.current
@@ -36,9 +33,9 @@ const Header = () => {
     setBase(calculateBase(pathname))
   }, [pathname])
 
-  function getTheme() {
-    return window.localStorage.getItem("theme") ?? "auto"
-  }
+  useEffect(() => {
+    setSelectedTheme(window.localStorage.getItem("theme") ?? "auto")
+  }, [])
 
   useEffect(() => {
     setThemeMode(selectedTheme as "auto" | "light" | "dark")
@@ -58,7 +55,7 @@ const Header = () => {
   const logo = (
     <button onClick={() => setPath("/")} className="unstyled-button">
       <img
-        src={type === "light" ? logoLight : logoDark}
+        src={type === "light" ? "/logo-color.svg" : "/logo-white.svg"}
         height={25}
         alt="Logo"
       />
@@ -96,7 +93,7 @@ const Header = () => {
       <Tabs.Item label="Home" value="/" />
       <Tabs.Item label="Portfolio" value="/portfolio" />
       <Tabs.Item label="Blog" value="/blog" />
-      <Tabs.Item label="Contact" value="/contact" />
+      <Tabs.Item label="Contact" value="/contactme" />
     </Tabs>
   )
 

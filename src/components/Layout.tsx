@@ -1,24 +1,29 @@
-import React, { useState, useEffect } from "react"
-import ReactDOM from "react-dom"
-import App from "./App"
-import * as serviceWorker from "./serviceWorker"
-import { GeistProvider, CssBaseline } from "@geist-ui/react"
+import React, { createContext, useState, useEffect } from "react"
+import { GeistProvider, CssBaseline, Page, useTheme } from "@geist-ui/react"
+import Header from "./Header"
 
 export type ThemeContextType = {
   theme: "light" | "dark"
   setThemeMode: (value: "auto" | "light" | "dark") => void
 }
 
-export const ThemeContext = React.createContext<ThemeContextType>({
+export const ThemeContext = createContext<ThemeContextType>({
   theme: "light",
   setThemeMode: (val) => console.log(val),
 })
 
-const Index = () => {
-  const [options, setOptions] = useState<"auto" | "light" | "dark">(
-    getSelectedTheme()
-  )
-  const [theme, setTheme] = useState<"light" | "dark">(getCurrentTheme())
+type LayoutProps = {
+  children: any
+}
+
+const Layout = ({ children }: LayoutProps) => {
+  const [options, setOptions] = useState<"auto" | "light" | "dark">("auto")
+  const [theme, setTheme] = useState<"light" | "dark">("light")
+
+  useEffect(() => {
+    setOptions(getSelectedTheme())
+    setTheme(getCurrentTheme())
+  }, [])
 
   function getSelectedTheme() {
     return (window.localStorage.getItem("theme") ?? "auto") as
@@ -61,15 +66,19 @@ const Index = () => {
       <ThemeContext.Provider
         value={{ theme, setThemeMode: (val) => setOptions(val) }}
       >
-        <App />
+        <Page>
+          <Page.Header style={{ height: 77.66 }}>
+            <Header />
+            <div
+              className="header-background"
+              style={{ backgroundColor: theme === "light" ? "white" : "black" }}
+            />
+          </Page.Header>
+          <Page.Content style={{ marginTop: -50 }}>{children}</Page.Content>
+        </Page>
       </ThemeContext.Provider>
     </GeistProvider>
   )
 }
 
-ReactDOM.render(<Index />, document.getElementById("root"))
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister()
+export default Layout

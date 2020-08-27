@@ -1,23 +1,22 @@
-import React, { useEffect, useState } from "react"
-import { Button, Row, Spinner } from "@geist-ui/react"
-import { useParams } from "react-router-dom"
-import NotFound from "../pages/NotFound"
+import { NextPage } from "next"
+import { Button, Row } from "@geist-ui/react"
+import NotFound from "../../components/NotFound"
 import ReactMarkdown from "react-markdown"
 import { Download, Code, ArrowLeft } from "@geist-ui/react-icons"
-import { Link } from "react-router-dom"
-import ImageDisplay from "./ImageDisplay"
-import useScreenWidth from "../hooks/useScreenWidth"
-import createHead from "../support/createHead"
+import Link from "../../components/Link"
+import ImageDisplay from "../../components/ImageDisplay"
+import useScreenWidth from "../../hooks/useScreenWidth"
+import Head from "../../components/Head"
+import fetchAirtable from "../../hooks/fetchAirtable"
+import { useState, useEffect } from "react"
 
 type PortfolioItemProps = {
-  data: any
+  item: any
 }
 
-const PortfolioItem = ({ data }: PortfolioItemProps) => {
-  const { portfolioId } = useParams<any>()
+const PortfolioItem: NextPage<PortfolioItemProps> = ({ item }) => {
   const { screenWidth } = useScreenWidth()
   const [showView, setShowView] = useState(false)
-  const item = data.find((item: any) => item.fields.Path === portfolioId)
 
   useEffect(() => {
     setInterval(() => {
@@ -34,13 +33,13 @@ const PortfolioItem = ({ data }: PortfolioItemProps) => {
       <ImageDisplay
         style={{ marginBottom: -20, maxWidth: 525 }}
         scale={0.9}
-        alt={`${item.fields.Name} Cover`}
+        alt={`${item.fields.Title} Cover`}
         gridWidth={screenWidth}
         height={getImageFor(item).height}
         width={getImageFor(item).width}
         src={getImageFor(item).url}
       />
-      <h1>{item.fields.Name}</h1>
+      <h1>{item.fields.Title}</h1>
       <h2 style={{ marginTop: -15 }}>{item.fields.Description}</h2>
     </div>
   )
@@ -76,16 +75,13 @@ const PortfolioItem = ({ data }: PortfolioItemProps) => {
 
   return item ? (
     <>
-      {createHead(
-        item.fields.Name,
-        item.fields.Description,
-        getImageFor(item).url
-      )}
-      <div className="center" style={{ opacity: showView ? 0 : 1 }}>
-        <Spinner size="large" />
-      </div>
+      <Head
+        title={item.fields.Title}
+        desc={item.fields.Description}
+        image={getImageFor(item).url}
+      />
       <div style={{ opacity: showView ? 1 : 0 }}>
-        <Link to="/">
+        <Link href="/portfolio">
           <Button
             type="abort"
             icon={<ArrowLeft />}
@@ -107,5 +103,9 @@ const PortfolioItem = ({ data }: PortfolioItemProps) => {
     <NotFound />
   )
 }
+
+PortfolioItem.getInitialProps = async (ctx) => ({
+  item: (await fetchAirtable("Portfolio", ctx.query.item as string)).records[0],
+})
 
 export default PortfolioItem

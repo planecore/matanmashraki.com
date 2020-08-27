@@ -3,7 +3,7 @@ import { createRef, useState, useEffect } from "react"
 export default function useGridWidth() {
   const gridRef = createRef<HTMLDivElement>()
   const [gridWidth, setGridWidth] = useState<number>()
-  const [prevWindowWidth, setPrevWindowWidth] = useState(window.innerWidth)
+  const [prevWindowWidth, setPrevWindowWidth] = useState(0)
 
   useEffect(() => {
     const resizeListener = () => {
