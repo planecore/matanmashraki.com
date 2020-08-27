@@ -130,7 +130,7 @@ const Home = () => {
   const portfolioPreview = (
     <>
       <Row style={{ marginTop: 100, zIndex: 50 }}>
-        <Col>
+        <Col style={{ marginTop: 3 }}>
           <h4>Portfolio</h4>
         </Col>
         <Col style={{ textAlign: "right" }}>
@@ -197,7 +197,7 @@ const Home = () => {
   const blogPreview = (
     <>
       <Row style={{ marginTop: 100, zIndex: 50 }}>
-        <Col>
+        <Col style={{ marginTop: 3 }}>
           <h4>Blog</h4>
         </Col>
         <Col style={{ textAlign: "right" }}>
