@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from "react"
-import { GeistProvider, CssBaseline, Page, useTheme } from "@geist-ui/react"
+import { GeistProvider, CssBaseline, Page, Spinner } from "@geist-ui/react"
+import { useRouter } from "next/router"
 import Header from "./Header"
 
 export type ThemeContextType = {
@@ -19,10 +20,25 @@ type LayoutProps = {
 const Layout = ({ children }: LayoutProps) => {
   const [options, setOptions] = useState<"auto" | "light" | "dark">("auto")
   const [theme, setTheme] = useState<"light" | "dark">("light")
+  const [isLoading, setIsLoading] = useState(false)
+  const { events } = useRouter()
 
   useEffect(() => {
     setOptions(getSelectedTheme())
-    setTheme(getCurrentTheme())
+    setTheme(getSystemTheme())
+
+    const handleStart = () => setIsLoading(true)
+    const handleEnd = () => setIsLoading(false)
+
+    events.on("routeChangeStart", handleStart)
+    events.on("routeChangeComplete", handleEnd)
+    events.on("routeChangeError", handleEnd)
+
+    return () => {
+      events.off("routeChangeStart", handleStart)
+      events.off("routeChangeComplete", handleEnd)
+      events.off("routeChangeError", handleEnd)
+    }
   }, [])
 
   function getSelectedTheme() {
@@ -32,7 +48,7 @@ const Layout = ({ children }: LayoutProps) => {
       | "dark"
   }
 
-  function getCurrentTheme() {
+  function getSystemTheme() {
     return window.matchMedia("(prefers-color-scheme: dark)").matches
       ? "dark"
       : "light"
@@ -47,7 +63,7 @@ const Layout = ({ children }: LayoutProps) => {
   useEffect(() => {
     const changeTheme = () => {
       if (options === "auto") {
-        setTheme(getCurrentTheme())
+        setTheme(getSystemTheme())
       }
     }
     changeTheme()
@@ -74,7 +90,14 @@ const Layout = ({ children }: LayoutProps) => {
               style={{ backgroundColor: theme === "light" ? "white" : "black" }}
             />
           </Page.Header>
-          <Page.Content style={{ marginTop: -50 }}>{children}</Page.Content>
+          <Page.Content>
+            <div className="center" style={{ opacity: isLoading ? 1 : 0 }}>
+              <Spinner size="large" />
+            </div>
+            <div style={{ opacity: isLoading ? 0 : 1, marginTop: -50 }}>
+              {children}
+            </div>
+          </Page.Content>
         </Page>
       </ThemeContext.Provider>
     </GeistProvider>
