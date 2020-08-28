@@ -50,6 +50,7 @@ const Contact: NextPage = () => {
 
   const handleResponse = (json: any) => {
     setLoading(false)
+    setCaptcha(null)
     recaptchaRef.current?.reset()
     if (json && !!json.success && json.success === true) {
       name.setState("")
@@ -71,7 +72,7 @@ const Contact: NextPage = () => {
   const sendMessage = (e: FormEvent) => {
     e.preventDefault()
     if (!captcha) {
-      setToast({ text: "Please verify that you're not a bot." })
+      setToast({ text: "Please verify you're not a bot." })
       return
     }
     if (!validateEmail(email.state)) {
@@ -88,7 +89,8 @@ const Contact: NextPage = () => {
       return
     }
     setLoading(true)
-    fetch("https://workers.matanmashraki.com/contact", {
+    const baseURL = `${window.location.protocol}//${window.location.host}`
+    fetch(`${baseURL}/api/contact`, {
       method: "POST",
       headers: {
         ReCAPTCHA: captcha,
@@ -102,7 +104,7 @@ const Contact: NextPage = () => {
     })
       .then((res) => res.json())
       .then((json) => handleResponse(json))
-      .catch((err) => handleResponse(null))
+      .catch(() => handleResponse(null))
   }
 
   return (
@@ -130,7 +132,7 @@ const Contact: NextPage = () => {
         <Row justify="center" style={{ height: 78 }}>
           <ReCAPTCHA
             ref={recaptchaRef}
-            sitekey="6LcZksIZAAAAADcDCXHnj67_pB_AWpqEWJv5FCyW"
+            sitekey={process.env.NEXT_PUBLIC_ReCAPTCHA_KEY}
             onChange={onReCAPTCHAChange}
             onExpired={onReCAPTCHAExpired}
             theme={type}

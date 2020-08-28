@@ -1,6 +1,6 @@
-import { NextPage } from "next"
+import { NextPage, GetStaticProps, GetStaticPaths } from "next"
 import { useEffect, useState } from "react"
-import { Button, Text, Row } from "@geist-ui/react"
+import { Button, Text, Row, Spinner } from "@geist-ui/react"
 import NotFound from "../../components/NotFound"
 import ReactMarkdown from "react-markdown/with-html"
 import { ArrowLeft } from "@geist-ui/react-icons"
@@ -9,6 +9,7 @@ import useScreenWidth from "../../hooks/useScreenWidth"
 import ImageDisplay from "../../components/ImageDisplay"
 import Head from "../../components/Head"
 import fetchAirtable from "../../hooks/fetchAirtable"
+import { useRouter } from "next/router"
 
 type BlogItemProps = {
   item: any
@@ -17,6 +18,7 @@ type BlogItemProps = {
 const BlogItem: NextPage<BlogItemProps> = ({ item }) => {
   const { screenWidth } = useScreenWidth()
   const [showView, setShowView] = useState(false)
+  const { isFallback } = useRouter()
 
   useEffect(() => {
     setInterval(() => {
@@ -74,13 +76,35 @@ const BlogItem: NextPage<BlogItemProps> = ({ item }) => {
         </Row>
       </div>
     </>
+  ) : isFallback ? (
+    <div className="center">
+      <Spinner size="large" />
+    </div>
   ) : (
     <NotFound />
   )
 }
 
-BlogItem.getInitialProps = async (ctx) => ({
-  item: (await fetchAirtable("Blog", ctx.query.article as string)).records[0]
+export const getStaticPaths: GetStaticPaths = async () => ({
+  paths: (await fetchAirtable("Blog", undefined, undefined, true)).records.map(
+    (item) => ({
+      params: {
+        article: item.fields.Path,
+      },
+    })
+  ),
+  fallback: true,
 })
+
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  const res = (await fetchAirtable("Blog", ctx.params.article as string))
+    .records
+  return {
+    props: {
+      item: res && res[0] ? res[0] : null,
+    },
+    revalidate: 5,
+  }
+}
 
 export default BlogItem

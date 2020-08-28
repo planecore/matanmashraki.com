@@ -1,5 +1,5 @@
-import { NextPage } from "next"
-import { Button, Row } from "@geist-ui/react"
+import { NextPage, GetStaticProps, GetStaticPaths } from "next"
+import { Button, Row, Spinner } from "@geist-ui/react"
 import NotFound from "../../components/NotFound"
 import ReactMarkdown from "react-markdown"
 import { Download, Code, ArrowLeft } from "@geist-ui/react-icons"
@@ -9,6 +9,7 @@ import useScreenWidth from "../../hooks/useScreenWidth"
 import Head from "../../components/Head"
 import fetchAirtable from "../../hooks/fetchAirtable"
 import { useState, useEffect } from "react"
+import { useRouter } from "next/router"
 
 type PortfolioItemProps = {
   item: any
@@ -17,6 +18,7 @@ type PortfolioItemProps = {
 const PortfolioItem: NextPage<PortfolioItemProps> = ({ item }) => {
   const { screenWidth } = useScreenWidth()
   const [showView, setShowView] = useState(false)
+  const { isFallback } = useRouter()
 
   useEffect(() => {
     setInterval(() => {
@@ -47,10 +49,7 @@ const PortfolioItem: NextPage<PortfolioItemProps> = ({ item }) => {
   const createButtons = (item: any) => (
     <div style={{ textAlign: "center", marginBottom: 30, marginTop: 20 }}>
       {item.fields.PrimaryButton && (
-        <a
-          href={item.fields.PrimaryButton}
-          style={{ padding: 5 }}
-        >
+        <a href={item.fields.PrimaryButton} style={{ padding: 5 }}>
           <Button auto shadow type="secondary" icon={<Download />}>
             Download
           </Button>
@@ -97,13 +96,35 @@ const PortfolioItem: NextPage<PortfolioItemProps> = ({ item }) => {
         </Row>
       </div>
     </>
+  ) : isFallback ? (
+    <div className="center">
+      <Spinner size="large" />
+    </div>
   ) : (
     <NotFound />
   )
 }
 
-PortfolioItem.getInitialProps = async (ctx) => ({
-  item: (await fetchAirtable("Portfolio", ctx.query.item as string)).records[0],
+export const getStaticPaths: GetStaticPaths = async () => ({
+  paths: (
+    await fetchAirtable("Portfolio", undefined, undefined, true)
+  ).records.map((item) => ({
+    params: {
+      item: item.fields.Path,
+    },
+  })),
+  fallback: true,
 })
+
+export const getStaticProps: GetStaticProps = async (ctx) => {
+  const res = (await fetchAirtable("Portfolio", ctx.params.item as string))
+    .records
+  return {
+    props: {
+      item: res && res[0] ? res[0] : null,
+    },
+    revalidate: 5,
+  }
+}
 
 export default PortfolioItem

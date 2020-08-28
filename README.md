@@ -6,6 +6,5 @@ Available on https://matanmashraki.com
 
 ## Technologies
 - Frontend: [React with Next.js](https://nextjs.org/)
-- Backend: [Cloudflare Workers](https://workers.dev/)
 - Data Source: [Airtable](https://airtable.com/)
 - UI: [Geist](https://github.com/geist-org/react)

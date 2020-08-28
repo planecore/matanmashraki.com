@@ -1,10 +1,10 @@
-import { NextPage } from 'next'
+import { NextPage, GetStaticProps } from "next"
 import { useTheme } from "@geist-ui/react"
 import Link from "../../components/Link"
 import ImageDisplay from "../../components/ImageDisplay"
 import useGridWidth from "../../hooks/useGridWidth"
 import Head from "../../components/Head"
-import fetchAirtable from '../../hooks/fetchAirtable'
+import fetchAirtable from "../../hooks/fetchAirtable"
 
 type FullPortfolioProps = {
   data: any
@@ -19,7 +19,11 @@ const FullPortfolio: NextPage<FullPortfolioProps> = ({ data }) => {
       .thumbnails.large
 
   const createItem = (item: any) => (
-    <Link key={item.id} as={`/portfolio/${item.fields.Path}`} href="/portfolio/[item]">
+    <Link
+      key={item.id}
+      as={`/portfolio/${item.fields.Path}`}
+      href="/portfolio/[item]"
+    >
       <div style={{ textAlign: "center" }}>
         <ImageDisplay
           style={{ marginBottom: -25 }}
@@ -48,14 +52,18 @@ const FullPortfolio: NextPage<FullPortfolioProps> = ({ data }) => {
         ref={gridRef}
         style={{ opacity: gridWidth ? 1 : 0 }}
       >
-        {data.records.map((item: any) => createItem(item))}
+        {data.map((item: any) => createItem(item))}
       </div>
     </>
   )
 }
 
-FullPortfolio.getInitialProps = async () => ({
-  data: await fetchAirtable("Portfolio")
+export const getStaticProps: GetStaticProps = async () => ({
+  props: {
+    data: (await fetchAirtable("Portfolio", undefined, undefined, true))
+      .records,
+  },
+  revalidate: 5,
 })
 
 export default FullPortfolio

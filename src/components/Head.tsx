@@ -4,12 +4,14 @@ type HeadProps = {
   title: string
   desc?: string
   image?: string
+  children?: any
 }
 
 const Head = ({
   title,
   desc = "18 y/o developer from Israel",
   image = "https://matanmashraki.com/preview.png",
+  children = undefined,
 }: HeadProps) => (
   <NextHead.default>
     <title>{`Matan Mashraki | ${title}`}</title>
@@ -28,6 +30,7 @@ const Head = ({
     <meta name="twitter:title" content={`Matan Mashraki | ${title}`} />
     <meta name="twitter:description" content={desc} />
     <meta name="twitter:image" content={image} />
+    {children}
   </NextHead.default>
 )
 

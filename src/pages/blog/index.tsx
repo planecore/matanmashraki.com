@@ -1,11 +1,11 @@
-import { NextPage } from 'next'
+import { NextPage, GetStaticProps } from "next"
 import { useEffect, useState } from "react"
 import { useTheme, Row, Col, Text } from "@geist-ui/react"
 import Link from "../../components/Link"
 import useScreenSize from "../../hooks/useScreenSize"
 import ImageDisplay from "../../components/ImageDisplay"
 import Head from "../../components/Head"
-import fetchAirtable from '../../hooks/fetchAirtable'
+import fetchAirtable from "../../hooks/fetchAirtable"
 
 type FullBlogProps = {
   data: any
@@ -82,15 +82,21 @@ const FullBlog: NextPage<FullBlogProps> = ({ data }) => {
   return (
     <>
       <Head title="Blog" />
-      <div className="grid" style={{ opacity: showView ? 1 : 0 }}>
-        {data.records.map((item: any) => createItem(item))}
+      <div
+        className={width < 700 ? "grid" : ""}
+        style={{ opacity: showView ? 1 : 0 }}
+      >
+        {data.map((item: any) => createItem(item))}
       </div>
     </>
   )
 }
 
-FullBlog.getInitialProps = async () => ({
-  data: await fetchAirtable("Blog")
+export const getStaticProps: GetStaticProps = async () => ({
+  props: {
+    data: (await fetchAirtable("Blog", undefined, undefined, true)).records,
+  },
+  revalidate: 5,
 })
 
 export default FullBlog

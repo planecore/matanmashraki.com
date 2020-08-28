@@ -240,6 +240,7 @@ export const getStaticProps: GetStaticProps = async () => ({
     portfolio: await fetchAirtable("Portfolio", undefined, 6, true),
     blog: await fetchAirtable("Blog", undefined, 6, true),
   },
+  revalidate: 5,
 })
 
 export default Home

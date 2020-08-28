@@ -39,12 +39,7 @@ const ImageDisplay = ({
     <div>
       {size.height && size.width && (
         <Display shadow style={style}>
-          <Image
-            alt={alt}
-            src={src}
-            width={size.width}
-            height={size.height}
-          />
+          <Image alt={alt} src={src} width={size.width} height={size.height} />
         </Display>
       )}
     </div>
