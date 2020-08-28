@@ -8,4 +8,4 @@ Available on https://matanmashraki.com
 - Frontend: [React with Next.js](https://nextjs.org/)
 - Backend: [Cloudflare Workers](https://workers.dev/)
 - Data Source: [Airtable](https://airtable.com/)
-- UI: [Geist UI](https://github.com/geist-org/react)
+- UI: [Geist](https://github.com/geist-org/react)

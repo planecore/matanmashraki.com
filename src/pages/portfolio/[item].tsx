@@ -48,8 +48,6 @@ const PortfolioItem: NextPage<PortfolioItemProps> = ({ item }) => {
     <div style={{ textAlign: "center", marginBottom: 30, marginTop: 20 }}>
       {item.fields.PrimaryButton && (
         <a
-          target="_blank"
-          rel="noopener noreferrer"
           href={item.fields.PrimaryButton}
           style={{ padding: 5 }}
         >
