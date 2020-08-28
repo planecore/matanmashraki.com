@@ -4,7 +4,11 @@ import { useRouter } from "next/router"
 import { ThemeContextType, ThemeContext } from "./Layout"
 import { Sun, Moon, Droplet } from "@geist-ui/react-icons"
 
-const Header = () => {
+type HeaderProps = {
+  routerEventURL?: string
+}
+
+const Header = ({ routerEventURL }: HeaderProps) => {
   const { type } = useTheme()
   const { setThemeMode } = useContext<ThemeContextType>(ThemeContext)
   const [selectedTheme, setSelectedTheme] = useState<string>("auto")
@@ -16,6 +20,14 @@ const Header = () => {
   useEffect(() => {
     if (pathname !== path) push(path)
   }, [path])
+
+  useEffect(() => {
+    if (routerEventURL) setBase(calculateBase(routerEventURL))
+    else {
+      setPath(pathname)
+      setBase(calculateBase(pathname))
+    }
+  }, [routerEventURL])
 
   useEffect(() => {
     const ref = headerRef.current

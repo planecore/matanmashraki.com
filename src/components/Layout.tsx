@@ -21,14 +21,21 @@ const Layout = ({ children }: LayoutProps) => {
   const [options, setOptions] = useState<"auto" | "light" | "dark">("auto")
   const [theme, setTheme] = useState<"light" | "dark">("light")
   const [isLoading, setIsLoading] = useState(false)
+  const [routerEventURL, setRouterEventURL] = useState<string | undefined>()
   const { events } = useRouter()
 
   useEffect(() => {
     setOptions(getSelectedTheme())
     setTheme(getSystemTheme())
 
-    const handleStart = () => setIsLoading(true)
-    const handleEnd = () => setIsLoading(false)
+    const handleStart = (url: string) => {
+      setRouterEventURL(url)
+      setIsLoading(true)
+    }
+    const handleEnd = () => {
+      setRouterEventURL(undefined)
+      setIsLoading(false)
+    }
 
     events.on("routeChangeStart", handleStart)
     events.on("routeChangeComplete", handleEnd)
@@ -84,7 +91,7 @@ const Layout = ({ children }: LayoutProps) => {
       >
         <Page>
           <Page.Header style={{ height: 77.66 }}>
-            <Header />
+            <Header routerEventURL={routerEventURL} />
             <div
               className="header-background"
               style={{ backgroundColor: theme === "light" ? "white" : "black" }}
