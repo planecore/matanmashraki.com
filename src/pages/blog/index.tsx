@@ -2,7 +2,7 @@ import { NextPage, GetStaticProps } from "next"
 import { useEffect, useState } from "react"
 import { useTheme, Row, Col, Text } from "@geist-ui/react"
 import Link from "../../components/Link"
-import useScreenSize from "../../hooks/useScreenSize"
+import useScreenWidth from "../../hooks/useScreenWidth"
 import ImageDisplay from "../../components/ImageDisplay"
 import Head from "../../components/Head"
 import fetchAirtable from "../../hooks/fetchAirtable"
@@ -13,7 +13,7 @@ type FullBlogProps = {
 
 const FullBlog: NextPage<FullBlogProps> = ({ data }) => {
   const { type } = useTheme()
-  const { width } = useScreenSize()
+  const { screenWidth } = useScreenWidth(false)
   const [showView, setShowView] = useState(false)
 
   useEffect(() => {
@@ -23,18 +23,18 @@ const FullBlog: NextPage<FullBlogProps> = ({ data }) => {
   }, [])
 
   const getImageFor = (item: any) =>
-    item.fields.Attachments.find((elem: any) => elem.filename === "Cover.png")
-      .thumbnails.large
+    item.fields.Attachments.find((elem: any) => elem.filename === "Cover.webp")
 
   const createSmallItem = (item: any) => (
     <div style={{ textAlign: "center" }}>
       <ImageDisplay
         style={{ marginBottom: -25 }}
         alt={`${item.fields.Title} Cover`}
-        gridWidth={300}
-        height={getImageFor(item).height}
-        width={getImageFor(item).width}
-        src={getImageFor(item).url}
+        parentWidth={300}
+        height={getImageFor(item).thumbnails.large.height}
+        width={getImageFor(item).thumbnails.large.width}
+        srcWebP={getImageFor(item).url}
+        srcPNG={getImageFor(item).thumbnails.large.url}
       />
       <Text h5 type="secondary">
         {item.fields.Date}
@@ -53,10 +53,11 @@ const FullBlog: NextPage<FullBlogProps> = ({ data }) => {
       <Col span={10}>
         <ImageDisplay
           alt={`${item.fields.Title} Cover`}
-          gridWidth={375}
-          height={getImageFor(item).height}
-          width={getImageFor(item).width}
-          src={getImageFor(item).url}
+          parentWidth={375}
+          height={getImageFor(item).thumbnails.large.height}
+          width={getImageFor(item).thumbnails.large.width}
+          srcWebP={getImageFor(item).url}
+          srcPNG={getImageFor(item).thumbnails.large.url}
         />
       </Col>
       <Col span={20}>
@@ -75,7 +76,7 @@ const FullBlog: NextPage<FullBlogProps> = ({ data }) => {
 
   const createItem = (item: any) => (
     <Link key={item.id} as={`/blog/${item.fields.Path}`} href="/blog/[article]">
-      {width < 700 ? createSmallItem(item) : createBigItem(item)}
+      {screenWidth < 700 ? createSmallItem(item) : createBigItem(item)}
     </Link>
   )
 
@@ -83,7 +84,7 @@ const FullBlog: NextPage<FullBlogProps> = ({ data }) => {
     <>
       <Head title="Blog" />
       <div
-        className={width < 700 ? "grid" : ""}
+        className={screenWidth < 700 ? "grid" : ""}
         style={{ opacity: showView ? 1 : 0 }}
       >
         {data.map((item: any) => createItem(item))}

@@ -40,8 +40,15 @@ const Contact: NextPage = () => {
 
   useEffect(() => {
     if (!form.current) return
-    ;[...form.current.querySelectorAll("div > span")].forEach(
-      (item: any) => (item.style.width = "115px")
+    ;[...form.current.querySelectorAll("div > span")].forEach((item: any) => {
+      item.style.width = "125px"
+      item.style.fontSize = "16px"
+    })
+    ;[...form.current.querySelectorAll("div > input")].forEach(
+      (item: any) => (item.style.fontSize = "16px")
+    )
+    ;[...form.current.querySelectorAll("div > textarea")].forEach(
+      (item: any) => (item.style.fontSize = "16px")
     )
   }, [form])
 
@@ -113,7 +120,7 @@ const Contact: NextPage = () => {
       <form
         ref={form}
         onSubmit={sendMessage}
-        style={{ marginTop: 40, textAlign: "center" }}
+        style={{ marginTop: 40, textAlign: "center", fontSize: 16 }}
       >
         <Spacer y={0.5} />
         <Input label="Name" width="100%" {...name.bindings} />

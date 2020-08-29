@@ -75,7 +75,7 @@ const Home: NextPage<HomeProps> = ({ portfolio, blog }) => {
       >
         <Linkedin color={type === "light" ? "black" : "white"} />
       </a>
-      <Link href="/contactme" style={{ margin: 10 }}>
+      <Link href="/contact" style={{ margin: 10 }}>
         <Mail color={type === "light" ? "black" : "white"} />
       </Link>
     </Row>
@@ -96,8 +96,7 @@ const Home: NextPage<HomeProps> = ({ portfolio, blog }) => {
   )
 
   const getImageFor = (item: any) =>
-    item.fields.Attachments.find((elem: any) => elem.filename === "Cover.png")
-      .thumbnails.large
+    item.fields.Attachments.find((elem: any) => elem.filename === "Cover.webp")
 
   const createPortfolioItem = (item: any, index: number) => (
     <Link
@@ -119,7 +118,9 @@ const Home: NextPage<HomeProps> = ({ portfolio, blog }) => {
             width={250}
             height={167}
             alt={`${item.fields.Title} Cover`}
-            src={getImageFor(item).url}
+            // TODO: Change to `getImageFor(item).url` after iOS 14
+            // gets significant market share.
+            src={getImageFor(item).thumbnails.large.url}
           />
         </Display>
         <Description
@@ -180,7 +181,9 @@ const Home: NextPage<HomeProps> = ({ portfolio, blog }) => {
             width={250}
             height={167}
             alt={`${item.fields.Title} Cover`}
-            src={getImageFor(item).url}
+            // TODO: Change to `getImageFor(item).url` after iOS 14
+            // gets significant market share.
+            src={getImageFor(item).thumbnails.large.url}
           />
         </Display>
         <Description

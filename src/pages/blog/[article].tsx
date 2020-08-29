@@ -27,8 +27,7 @@ const BlogItem: NextPage<BlogItemProps> = ({ item }) => {
   }, [])
 
   const getImageFor = (item: any) =>
-    item.fields.Attachments.find((elem: any) => elem.filename === "Cover.png")
-      .thumbnails.large
+    item.fields.Attachments.find((elem: any) => elem.filename === "Cover.webp")
 
   const createItem = (item: any) => (
     <div style={{ textAlign: "center" }}>
@@ -36,10 +35,11 @@ const BlogItem: NextPage<BlogItemProps> = ({ item }) => {
         style={{ marginBottom: -10, maxWidth: 525 }}
         scale={0.9}
         alt={`${item.fields.Title} Cover`}
-        gridWidth={screenWidth}
-        height={getImageFor(item).height}
-        width={getImageFor(item).width}
-        src={getImageFor(item).url}
+        parentWidth={screenWidth}
+        height={getImageFor(item).thumbnails.large.height}
+        width={getImageFor(item).thumbnails.large.width}
+        srcWebP={getImageFor(item).url}
+        srcPNG={getImageFor(item).thumbnails.large.url}
       />
       <Text type="secondary" style={{ marginBottom: -5 }}>
         {item.fields.Date}
@@ -56,7 +56,7 @@ const BlogItem: NextPage<BlogItemProps> = ({ item }) => {
       <Head
         title={item.fields.Title}
         desc={item.fields.Description}
-        image={getImageFor(item).url}
+        image={getImageFor(item).thumbnails.large.url}
       />
       <div style={{ opacity: showView ? 1 : 0 }}>
         <Link href="/blog">

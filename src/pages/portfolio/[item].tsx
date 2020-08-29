@@ -27,8 +27,7 @@ const PortfolioItem: NextPage<PortfolioItemProps> = ({ item }) => {
   }, [])
 
   const getImageFor = (item: any) =>
-    item.fields.Attachments.find((elem: any) => elem.filename === "Cover.png")
-      .thumbnails.large
+    item.fields.Attachments.find((elem: any) => elem.filename === "Cover.webp")
 
   const createItem = (item: any) => (
     <div style={{ textAlign: "center" }}>
@@ -36,10 +35,11 @@ const PortfolioItem: NextPage<PortfolioItemProps> = ({ item }) => {
         style={{ marginBottom: -20, maxWidth: 525 }}
         scale={0.9}
         alt={`${item.fields.Title} Cover`}
-        gridWidth={screenWidth}
-        height={getImageFor(item).height}
-        width={getImageFor(item).width}
-        src={getImageFor(item).url}
+        parentWidth={screenWidth}
+        height={getImageFor(item).thumbnails.large.height}
+        width={getImageFor(item).thumbnails.large.width}
+        srcWebP={getImageFor(item).url}
+        srcPNG={getImageFor(item).thumbnails.large.url}
       />
       <h1>{item.fields.Title}</h1>
       <h2 style={{ marginTop: -15 }}>{item.fields.Description}</h2>
@@ -75,7 +75,7 @@ const PortfolioItem: NextPage<PortfolioItemProps> = ({ item }) => {
       <Head
         title={item.fields.Title}
         desc={item.fields.Description}
-        image={getImageFor(item).url}
+        image={getImageFor(item).thumbnails.large.url}
       />
       <div style={{ opacity: showView ? 1 : 0 }}>
         <Link href="/portfolio">

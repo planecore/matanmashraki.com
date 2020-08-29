@@ -15,8 +15,7 @@ const FullPortfolio: NextPage<FullPortfolioProps> = ({ data }) => {
   const { gridWidth, gridRef } = useGridWidth()
 
   const getImageFor = (item: any) =>
-    item.fields.Attachments.find((elem: any) => elem.filename === "Cover.png")
-      .thumbnails.large
+    item.fields.Attachments.find((elem: any) => elem.filename === "Cover.webp")
 
   const createItem = (item: any) => (
     <Link
@@ -29,10 +28,11 @@ const FullPortfolio: NextPage<FullPortfolioProps> = ({ data }) => {
           style={{ marginBottom: -25 }}
           scale={0.9}
           alt={`${item.fields.Title} Cover`}
-          gridWidth={gridWidth ?? 0}
-          height={getImageFor(item).height}
-          width={getImageFor(item).width}
-          src={getImageFor(item).url}
+          parentWidth={gridWidth ?? 0}
+          height={getImageFor(item).thumbnails.large.height}
+          width={getImageFor(item).thumbnails.large.width}
+          srcWebP={getImageFor(item).url}
+          srcPNG={getImageFor(item).thumbnails.large.url}
         />
         <h3 style={{ color: type === "light" ? "black" : "white" }}>
           {item.fields.Title}

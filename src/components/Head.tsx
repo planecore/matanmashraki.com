@@ -17,10 +17,7 @@ const Head = ({
     <title>{`Matan Mashraki | ${title}`}</title>
     <link rel="icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, maximum-scale=1"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={desc} />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={`Matan Mashraki | ${title}`} />

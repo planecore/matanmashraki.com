@@ -105,7 +105,7 @@ const Header = ({ routerEventURL }: HeaderProps) => {
       <Tabs.Item label="Home" value="/" />
       <Tabs.Item label="Portfolio" value="/portfolio" />
       <Tabs.Item label="Blog" value="/blog" />
-      <Tabs.Item label="Contact" value="/contactme" />
+      <Tabs.Item label="Contact" value="/contact" />
     </Tabs>
   )
 

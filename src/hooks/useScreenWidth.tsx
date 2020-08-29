@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react"
 
-export default function useScreenWidth() {
-  const [screenWidth, setScreenWidth] = useState<number>(0)
+export default function useScreenWidth(
+  updateOnlyWhenGetsBigger: boolean = true
+) {
+  const [screenWidth, setScreenWidth] = useState(0)
 
   useEffect(() => {
     setScreenWidth(window.innerWidth)
@@ -9,7 +11,7 @@ export default function useScreenWidth() {
 
   useEffect(() => {
     const resizeListener = () => {
-      if (screenWidth > window.innerWidth) return
+      if (updateOnlyWhenGetsBigger && screenWidth > window.innerWidth) return
       setScreenWidth(window.innerWidth)
     }
     window.addEventListener("resize", resizeListener)
