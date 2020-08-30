@@ -19,14 +19,15 @@ import {
 } from "@geist-ui/react-icons"
 import Head from "../components/Head"
 import { NextPage, GetStaticProps } from "next"
-import fetchAirtable from "../hooks/fetchAirtable"
+import fetchAirtable from "../data/fetchAirtable"
+import { CompactResponse, CompactRecord } from "../data/types"
 
-type HomeProps = {
-  portfolio: any
-  blog: any
+type HomePageProps = {
+  portfolio: CompactResponse
+  blog: CompactResponse
 }
 
-const Home: NextPage<HomeProps> = ({ portfolio, blog }) => {
+const HomePage: NextPage<HomePageProps> = ({ portfolio, blog }) => {
   const { type } = useTheme()
 
   const highlights = (
@@ -95,13 +96,13 @@ const Home: NextPage<HomeProps> = ({ portfolio, blog }) => {
     </div>
   )
 
-  const getImageFor = (item: any) =>
-    item.fields.Attachments.find((elem: any) => elem.filename === "Cover.webp")
+  const getImageFor = (record: CompactRecord) =>
+    record.fields.Attachments.find((elem) => elem.filename === "Cover.webp")
 
-  const createPortfolioItem = (item: any, index: number) => (
+  const createPortfolioItem = (record: CompactRecord, index: number) => (
     <Link
-      key={item.id}
-      as={`/portfolio/${item.fields.Path}`}
+      key={record.id}
+      as={`/portfolio/${record.fields.Path}`}
       href="/portfolio/[item]"
     >
       <div
@@ -117,15 +118,15 @@ const Home: NextPage<HomeProps> = ({ portfolio, blog }) => {
           <Image
             width={250}
             height={167}
-            alt={`${item.fields.Title} Cover`}
-            // TODO: Change to `getImageFor(item).url` after iOS 14
+            alt={`${record.fields.Title} Cover`}
+            // TODO: Change to `getImageFor(record).url` after iOS 14
             // gets significant market share.
-            src={getImageFor(item).thumbnails.large.url}
+            src={getImageFor(record).thumbnails.large.url}
           />
         </Display>
         <Description
-          title={item.fields.Title}
-          content={item.fields.Description}
+          title={record.fields.Title}
+          content={record.fields.Description}
         />
       </div>
     </Link>
@@ -158,15 +159,19 @@ const Home: NextPage<HomeProps> = ({ portfolio, blog }) => {
           marginTop: -40,
         }}
       >
-        {portfolio.records.map((item: any, index: number) =>
-          createPortfolioItem(item, index)
+        {portfolio.records.map((record: CompactRecord, index: number) =>
+          createPortfolioItem(record, index)
         )}
       </Row>
     </>
   )
 
-  const createBlogItem = (item: any, index: number) => (
-    <Link key={item.id} as={`/blog/${item.fields.Path}`} href="/blog/[article]">
+  const createBlogItem = (record: CompactRecord, index: number) => (
+    <Link
+      key={record.id}
+      as={`/blog/${record.fields.Path}`}
+      href="/blog/[article]"
+    >
       <div
         style={{
           textAlign: "left",
@@ -180,15 +185,15 @@ const Home: NextPage<HomeProps> = ({ portfolio, blog }) => {
           <Image
             width={250}
             height={167}
-            alt={`${item.fields.Title} Cover`}
-            // TODO: Change to `getImageFor(item).url` after iOS 14
+            alt={`${record.fields.Title} Cover`}
+            // TODO: Change to `getImageFor(record).url` after iOS 14
             // gets significant market share.
-            src={getImageFor(item).thumbnails.large.url}
+            src={getImageFor(record).thumbnails.large.url}
           />
         </Display>
         <Description
-          title={item.fields.Title}
-          content={item.fields.Description}
+          title={record.fields.Title}
+          content={record.fields.Description}
         />
       </div>
     </Link>
@@ -221,8 +226,8 @@ const Home: NextPage<HomeProps> = ({ portfolio, blog }) => {
           marginTop: -40,
         }}
       >
-        {blog.records.map((item: any, index: number) =>
-          createBlogItem(item, index)
+        {blog.records.map((record: CompactRecord, index: number) =>
+          createBlogItem(record, index)
         )}
       </Row>
     </>
@@ -240,10 +245,15 @@ const Home: NextPage<HomeProps> = ({ portfolio, blog }) => {
 
 export const getStaticProps: GetStaticProps = async () => ({
   props: {
-    portfolio: await fetchAirtable("Portfolio", undefined, 6, true),
-    blog: await fetchAirtable("Blog", undefined, 6, true),
+    portfolio: (await fetchAirtable(
+      "Portfolio",
+      undefined,
+      6,
+      true
+    )) as CompactResponse,
+    blog: (await fetchAirtable("Blog", undefined, 6, true)) as CompactResponse,
   },
   revalidate: 5,
 })
 
-export default Home
+export default HomePage

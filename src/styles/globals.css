@@ -58,6 +58,16 @@
   }
 }
 
+.markdown {
+  max-width: 700px;
+}
+
+@media (max-width: 800px) {
+  .markdown {
+    width: 100%;
+  }
+}
+
 a {
   color: inherit;
   text-decoration: inherit;

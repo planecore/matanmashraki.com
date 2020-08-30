@@ -1,6 +1,6 @@
 import { createRef, useState, useEffect } from "react"
 
-export default function useGridWidth() {
+const useGridWidth = () => {
   const gridRef = createRef<HTMLDivElement>()
   const [gridWidth, setGridWidth] = useState<number>()
   const [prevWindowWidth, setPrevWindowWidth] = useState(0)
@@ -29,3 +29,5 @@ export default function useGridWidth() {
     gridRef,
   }
 }
+
+export default useGridWidth

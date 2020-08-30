@@ -7,15 +7,20 @@ import Link from "../../components/Link"
 import ImageDisplay from "../../components/ImageDisplay"
 import useScreenWidth from "../../hooks/useScreenWidth"
 import Head from "../../components/Head"
-import fetchAirtable from "../../hooks/fetchAirtable"
+import fetchAirtable from "../../data/fetchAirtable"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/router"
+import {
+  CompactResponse,
+  PortfolioResponse,
+  PortfolioRecord,
+} from "../../data/types"
 
-type PortfolioItemProps = {
-  item: any
+type PortfolioItemPageProps = {
+  record: PortfolioRecord
 }
 
-const PortfolioItem: NextPage<PortfolioItemProps> = ({ item }) => {
+const PortfolioItemPage: NextPage<PortfolioItemPageProps> = ({ record }) => {
   const { screenWidth } = useScreenWidth()
   const [showView, setShowView] = useState(false)
   const { isFallback } = useRouter()
@@ -26,40 +31,40 @@ const PortfolioItem: NextPage<PortfolioItemProps> = ({ item }) => {
     }, 25)
   }, [])
 
-  const getImageFor = (item: any) =>
-    item.fields.Attachments.find((elem: any) => elem.filename === "Cover.webp")
+  const getImageFor = (record: PortfolioRecord) =>
+    record.fields.Attachments.find((elem) => elem.filename === "Cover.webp")
 
-  const createItem = (item: any) => (
+  const createItem = (record: PortfolioRecord) => (
     <div style={{ textAlign: "center" }}>
       <ImageDisplay
         style={{ marginBottom: -20, maxWidth: 525 }}
         scale={0.9}
-        alt={`${item.fields.Title} Cover`}
+        alt={`${record.fields.Title} Cover`}
         parentWidth={screenWidth}
-        height={getImageFor(item).thumbnails.large.height}
-        width={getImageFor(item).thumbnails.large.width}
-        srcWebP={getImageFor(item).url}
-        srcPNG={getImageFor(item).thumbnails.large.url}
+        height={getImageFor(record).thumbnails.large.height}
+        width={getImageFor(record).thumbnails.large.width}
+        srcWebP={getImageFor(record).url}
+        srcPNG={getImageFor(record).thumbnails.large.url}
       />
-      <h1>{item.fields.Title}</h1>
-      <h2 style={{ marginTop: -15 }}>{item.fields.Description}</h2>
+      <h1>{record.fields.Title}</h1>
+      <h2 style={{ marginTop: -15 }}>{record.fields.Description}</h2>
     </div>
   )
 
-  const createButtons = (item: any) => (
+  const createButtons = (record: PortfolioRecord) => (
     <div style={{ textAlign: "center", marginBottom: 30, marginTop: 20 }}>
-      {item.fields.PrimaryButton && (
-        <a href={item.fields.PrimaryButton} style={{ padding: 5 }}>
+      {record.fields.PrimaryButton && (
+        <a href={record.fields.PrimaryButton} style={{ padding: 5 }}>
           <Button auto shadow type="secondary" icon={<Download />}>
             Download
           </Button>
         </a>
       )}
-      {item.fields.SecondButton && (
+      {record.fields.SecondButton && (
         <a
           target="_blank"
           rel="noopener noreferrer"
-          href={item.fields.SecondButton}
+          href={record.fields.SecondButton}
           style={{ padding: 5 }}
         >
           <Button auto shadow type="secondary" icon={<Code />}>
@@ -70,12 +75,12 @@ const PortfolioItem: NextPage<PortfolioItemProps> = ({ item }) => {
     </div>
   )
 
-  return item ? (
+  return record ? (
     <>
       <Head
-        title={item.fields.Title}
-        desc={item.fields.Description}
-        image={getImageFor(item).thumbnails.large.url}
+        title={record.fields.Title}
+        desc={record.fields.Description}
+        image={getImageFor(record).thumbnails.large.url}
       />
       <div style={{ opacity: showView ? 1 : 0 }}>
         <Link href="/portfolio">
@@ -87,11 +92,11 @@ const PortfolioItem: NextPage<PortfolioItemProps> = ({ item }) => {
             Back to Portfolio
           </Button>
         </Link>
-        {createItem(item)}
-        {createButtons(item)}
+        {createItem(record)}
+        {createButtons(record)}
         <Row justify="center">
-          <div style={{ width: "90%" }}>
-            <ReactMarkdown source={item.fields.Content} />
+          <div className="markdown">
+            <ReactMarkdown source={record.fields.Content} />
           </div>
         </Row>
       </div>
@@ -106,25 +111,30 @@ const PortfolioItem: NextPage<PortfolioItemProps> = ({ item }) => {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => ({
-  paths: (
-    await fetchAirtable("Portfolio", undefined, undefined, true)
-  ).records.map((item) => ({
+  paths: ((await fetchAirtable(
+    "Portfolio",
+    undefined,
+    undefined,
+    true
+  )) as CompactResponse).records.map((record) => ({
     params: {
-      item: item.fields.Path,
+      item: record.fields.Path,
     },
   })),
   fallback: true,
 })
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
-  const res = (await fetchAirtable("Portfolio", ctx.params.item as string))
-    .records
+  const res = ((await fetchAirtable(
+    "Portfolio",
+    ctx.params.item as string
+  )) as PortfolioResponse).records
   return {
     props: {
-      item: res && res[0] ? res[0] : null,
+      record: res && res[0] ? res[0] : null,
     },
     revalidate: 5,
   }
 }
 
-export default PortfolioItem
+export default PortfolioItemPage

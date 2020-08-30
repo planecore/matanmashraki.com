@@ -4,7 +4,7 @@ type HeadProps = {
   title: string
   desc?: string
   image?: string
-  children?: any
+  children?: JSX.Element | [JSX.Element]
 }
 
 const Head = ({
@@ -23,6 +23,7 @@ const Head = ({
     <meta property="og:title" content={`Matan Mashraki | ${title}`} />
     <meta property="og:description" content={desc} />
     <meta property="og:image" content={image} />
+    <meta property="og:site_name" content="Matan Mashraki" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={`Matan Mashraki | ${title}`} />
     <meta name="twitter:description" content={desc} />

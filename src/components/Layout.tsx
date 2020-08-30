@@ -14,7 +14,7 @@ export const ThemeContext = createContext<ThemeContextType>({
 })
 
 type LayoutProps = {
-  children: any
+  children: JSX.Element | [JSX.Element]
 }
 
 const Layout = ({ children }: LayoutProps) => {
@@ -48,35 +48,34 @@ const Layout = ({ children }: LayoutProps) => {
     }
   }, [])
 
-  function getSelectedTheme() {
-    return (window.localStorage.getItem("theme") ?? "auto") as
+  const getSelectedTheme = () =>
+    (window.localStorage.getItem("theme") ?? "auto") as
       | "auto"
       | "light"
       | "dark"
-  }
 
-  function getSystemTheme() {
-    return window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light"
-  }
+  const getSystemTheme = () =>
+    window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
 
   useEffect(() => {
+    // if options set to manual, switch the theme
     if (options !== "auto") {
       setTheme(options)
     }
-  }, [theme, options])
-
-  useEffect(() => {
+    // listener that reacts to system theme changes
+    // and changes the site theme
     const changeTheme = () => {
       if (options === "auto") {
         setTheme(getSystemTheme())
       }
     }
+    // run the listener on load
     changeTheme()
+    // add listener to system theme changes
     window
       .matchMedia("(prefers-color-scheme: dark)")
       .addListener(() => changeTheme())
+    // remove listener on exit
     return () =>
       window
         .matchMedia("(prefers-color-scheme: dark)")

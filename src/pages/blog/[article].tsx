@@ -8,14 +8,15 @@ import Link from "../../components/Link"
 import useScreenWidth from "../../hooks/useScreenWidth"
 import ImageDisplay from "../../components/ImageDisplay"
 import Head from "../../components/Head"
-import fetchAirtable from "../../hooks/fetchAirtable"
+import fetchAirtable from "../../data/fetchAirtable"
 import { useRouter } from "next/router"
+import { BlogRecord, BlogResponse, CompactResponse } from "../../data/types"
 
-type BlogItemProps = {
-  item: any
+type BlogArticlePageProps = {
+  record: BlogRecord
 }
 
-const BlogItem: NextPage<BlogItemProps> = ({ item }) => {
+const BlogArticlePage: NextPage<BlogArticlePageProps> = ({ record }) => {
   const { screenWidth } = useScreenWidth()
   const [showView, setShowView] = useState(false)
   const { isFallback } = useRouter()
@@ -26,37 +27,37 @@ const BlogItem: NextPage<BlogItemProps> = ({ item }) => {
     }, 25)
   }, [])
 
-  const getImageFor = (item: any) =>
-    item.fields.Attachments.find((elem: any) => elem.filename === "Cover.webp")
+  const getImageFor = (record: BlogRecord) =>
+    record.fields.Attachments.find((elem) => elem.filename === "Cover.webp")
 
-  const createItem = (item: any) => (
+  const createItem = (record: BlogRecord) => (
     <div style={{ textAlign: "center" }}>
       <ImageDisplay
         style={{ marginBottom: -10, maxWidth: 525 }}
         scale={0.9}
-        alt={`${item.fields.Title} Cover`}
+        alt={`${record.fields.Title} Cover`}
         parentWidth={screenWidth}
-        height={getImageFor(item).thumbnails.large.height}
-        width={getImageFor(item).thumbnails.large.width}
-        srcWebP={getImageFor(item).url}
-        srcPNG={getImageFor(item).thumbnails.large.url}
+        height={getImageFor(record).thumbnails.large.height}
+        width={getImageFor(record).thumbnails.large.width}
+        srcWebP={getImageFor(record).url}
+        srcPNG={getImageFor(record).thumbnails.large.url}
       />
       <Text type="secondary" style={{ marginBottom: -5 }}>
-        {item.fields.Date}
+        {record.fields.Date}
       </Text>
-      <h1>{item.fields.Title}</h1>
+      <h1>{record.fields.Title}</h1>
       <h2 style={{ marginTop: -15, marginBottom: 50 }}>
-        {item.fields.Description}
+        {record.fields.Description}
       </h2>
     </div>
   )
 
-  return item ? (
+  return record ? (
     <>
       <Head
-        title={item.fields.Title}
-        desc={item.fields.Description}
-        image={getImageFor(item).thumbnails.large.url}
+        title={record.fields.Title}
+        desc={record.fields.Description}
+        image={getImageFor(record).thumbnails.large.url}
       />
       <div style={{ opacity: showView ? 1 : 0 }}>
         <Link href="/blog">
@@ -68,10 +69,10 @@ const BlogItem: NextPage<BlogItemProps> = ({ item }) => {
             Back to Blog
           </Button>
         </Link>
-        {createItem(item)}
+        {createItem(record)}
         <Row justify="center">
-          <div style={{ width: "90%" }}>
-            <ReactMarkdown source={item.fields.Content} escapeHtml={false} />
+          <div className="markdown">
+            <ReactMarkdown source={record.fields.Content} escapeHtml={false} />
           </div>
         </Row>
       </div>
@@ -86,25 +87,30 @@ const BlogItem: NextPage<BlogItemProps> = ({ item }) => {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => ({
-  paths: (await fetchAirtable("Blog", undefined, undefined, true)).records.map(
-    (item) => ({
-      params: {
-        article: item.fields.Path,
-      },
-    })
-  ),
+  paths: ((await fetchAirtable(
+    "Blog",
+    undefined,
+    undefined,
+    true
+  )) as CompactResponse).records.map((record) => ({
+    params: {
+      article: record.fields.Path,
+    },
+  })),
   fallback: true,
 })
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
-  const res = (await fetchAirtable("Blog", ctx.params.article as string))
-    .records
+  const res = ((await fetchAirtable(
+    "Blog",
+    ctx.params.article as string
+  )) as BlogResponse).records
   return {
     props: {
-      item: res && res[0] ? res[0] : null,
+      record: res && res[0] ? res[0] : null,
     },
     revalidate: 5,
   }
 }
 
-export default BlogItem
+export default BlogArticlePage

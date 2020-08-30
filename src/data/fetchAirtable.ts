@@ -1,8 +1,10 @@
 const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID
 const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY
 
+type Table = "Portfolio" | "Blog"
+
 export default (
-  table: string,
+  table: Table,
   path?: string,
   limit?: number,
   compact: boolean = false
@@ -10,9 +12,11 @@ export default (
   const limitArg = limit ? `&maxRecords=${limit}` : ""
   const pathArg = path ? `&filterByFormula={Path} = '${path}'` : ""
   const compactArg = compact
-    ? `&fields[]=Title&fields[]=Description&fields[]=Attachments&fields[]=Path`
+    ? `&fields[]=Title&fields[]=Description&fields[]=Attachments&fields[]=Path${
+        table === "Blog" ? "&fields[]=Date" : ""
+      }`
     : ""
-  if (table === "" || (table !== "Portfolio" && table !== "Blog")) {
+  if (table !== "Portfolio" && table !== "Blog") {
     return {
       error: {
         type: "TABLE_NOT_FOUND",
@@ -29,7 +33,6 @@ export default (
     }
   )
     .then((response) => response.json())
-    .then((data) => data)
     .catch(() => ({
       error: {
         type: "JSON_NOT_DECODED",

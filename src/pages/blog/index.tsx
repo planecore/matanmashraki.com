@@ -5,13 +5,14 @@ import Link from "../../components/Link"
 import useScreenWidth from "../../hooks/useScreenWidth"
 import ImageDisplay from "../../components/ImageDisplay"
 import Head from "../../components/Head"
-import fetchAirtable from "../../hooks/fetchAirtable"
+import fetchAirtable from "../../data/fetchAirtable"
+import { CompactResponse, CompactRecord } from "../../data/types"
 
-type FullBlogProps = {
-  data: any
+type BlogPageProps = {
+  records: [CompactRecord]
 }
 
-const FullBlog: NextPage<FullBlogProps> = ({ data }) => {
+const BlogPage: NextPage<BlogPageProps> = ({ records }) => {
   const { type } = useTheme()
   const { screenWidth } = useScreenWidth(false)
   const [showView, setShowView] = useState(false)
@@ -22,61 +23,65 @@ const FullBlog: NextPage<FullBlogProps> = ({ data }) => {
     }, 25)
   }, [])
 
-  const getImageFor = (item: any) =>
-    item.fields.Attachments.find((elem: any) => elem.filename === "Cover.webp")
+  const getImageFor = (record: CompactRecord) =>
+    record.fields.Attachments.find((elem) => elem.filename === "Cover.webp")
 
-  const createSmallItem = (item: any) => (
+  const createSmallItem = (record: CompactRecord) => (
     <div style={{ textAlign: "center" }}>
       <ImageDisplay
         style={{ marginBottom: -25 }}
-        alt={`${item.fields.Title} Cover`}
+        alt={`${record.fields.Title} Cover`}
         parentWidth={300}
-        height={getImageFor(item).thumbnails.large.height}
-        width={getImageFor(item).thumbnails.large.width}
-        srcWebP={getImageFor(item).url}
-        srcPNG={getImageFor(item).thumbnails.large.url}
+        height={getImageFor(record).thumbnails.large.height}
+        width={getImageFor(record).thumbnails.large.width}
+        srcWebP={getImageFor(record).url}
+        srcPNG={getImageFor(record).thumbnails.large.url}
       />
       <Text h5 type="secondary">
-        {item.fields.Date}
+        {record.fields.Date}
       </Text>
       <h3 style={{ color: type === "light" ? "black" : "white" }}>
-        {item.fields.Title}
+        {record.fields.Title}
       </h3>
       <h5 style={{ color: type === "light" ? "black" : "white" }}>
-        {item.fields.Description}
+        {record.fields.Description}
       </h5>
     </div>
   )
 
-  const createBigItem = (item: any) => (
+  const createBigItem = (record: CompactRecord) => (
     <Row gap={0.8} align="middle">
       <Col span={10}>
         <ImageDisplay
-          alt={`${item.fields.Title} Cover`}
+          alt={`${record.fields.Title} Cover`}
           parentWidth={375}
-          height={getImageFor(item).thumbnails.large.height}
-          width={getImageFor(item).thumbnails.large.width}
-          srcWebP={getImageFor(item).url}
-          srcPNG={getImageFor(item).thumbnails.large.url}
+          height={getImageFor(record).thumbnails.large.height}
+          width={getImageFor(record).thumbnails.large.width}
+          srcWebP={getImageFor(record).url}
+          srcPNG={getImageFor(record).thumbnails.large.url}
         />
       </Col>
       <Col span={20}>
         <Text h5 type="secondary">
-          {item.fields.Date}
+          {record.fields.Date}
         </Text>
         <h2 style={{ color: type === "light" ? "black" : "white" }}>
-          {item.fields.Title}
+          {record.fields.Title}
         </h2>
         <h3 style={{ color: type === "light" ? "black" : "white" }}>
-          {item.fields.Description}
+          {record.fields.Description}
         </h3>
       </Col>
     </Row>
   )
 
-  const createItem = (item: any) => (
-    <Link key={item.id} as={`/blog/${item.fields.Path}`} href="/blog/[article]">
-      {screenWidth < 700 ? createSmallItem(item) : createBigItem(item)}
+  const createItem = (record: CompactRecord) => (
+    <Link
+      key={record.id}
+      as={`/blog/${record.fields.Path}`}
+      href="/blog/[article]"
+    >
+      {screenWidth < 700 ? createSmallItem(record) : createBigItem(record)}
     </Link>
   )
 
@@ -87,7 +92,7 @@ const FullBlog: NextPage<FullBlogProps> = ({ data }) => {
         className={screenWidth < 700 ? "grid" : ""}
         style={{ opacity: showView ? 1 : 0 }}
       >
-        {data.map((item: any) => createItem(item))}
+        {records.map((record) => createItem(record))}
       </div>
     </>
   )
@@ -95,9 +100,14 @@ const FullBlog: NextPage<FullBlogProps> = ({ data }) => {
 
 export const getStaticProps: GetStaticProps = async () => ({
   props: {
-    data: (await fetchAirtable("Blog", undefined, undefined, true)).records,
+    records: ((await fetchAirtable(
+      "Blog",
+      undefined,
+      undefined,
+      true
+    )) as CompactResponse).records,
   },
   revalidate: 5,
 })
 
-export default FullBlog
+export default BlogPage

@@ -4,41 +4,42 @@ import Link from "../../components/Link"
 import ImageDisplay from "../../components/ImageDisplay"
 import useGridWidth from "../../hooks/useGridWidth"
 import Head from "../../components/Head"
-import fetchAirtable from "../../hooks/fetchAirtable"
+import fetchAirtable from "../../data/fetchAirtable"
+import { CompactRecord, CompactResponse } from "../../data/types"
 
-type FullPortfolioProps = {
-  data: any
+type PortfolioPageProps = {
+  records: [CompactRecord]
 }
 
-const FullPortfolio: NextPage<FullPortfolioProps> = ({ data }) => {
+const PortfolioPage: NextPage<PortfolioPageProps> = ({ records }) => {
   const { type } = useTheme()
   const { gridWidth, gridRef } = useGridWidth()
 
-  const getImageFor = (item: any) =>
-    item.fields.Attachments.find((elem: any) => elem.filename === "Cover.webp")
+  const getImageFor = (record: CompactRecord) =>
+    record.fields.Attachments.find((elem) => elem.filename === "Cover.webp")
 
-  const createItem = (item: any) => (
+  const createItem = (record: CompactRecord) => (
     <Link
-      key={item.id}
-      as={`/portfolio/${item.fields.Path}`}
+      key={record.id}
+      as={`/portfolio/${record.fields.Path}`}
       href="/portfolio/[item]"
     >
       <div style={{ textAlign: "center" }}>
         <ImageDisplay
           style={{ marginBottom: -25 }}
           scale={0.9}
-          alt={`${item.fields.Title} Cover`}
+          alt={`${record.fields.Title} Cover`}
           parentWidth={gridWidth ?? 0}
-          height={getImageFor(item).thumbnails.large.height}
-          width={getImageFor(item).thumbnails.large.width}
-          srcWebP={getImageFor(item).url}
-          srcPNG={getImageFor(item).thumbnails.large.url}
+          height={getImageFor(record).thumbnails.large.height}
+          width={getImageFor(record).thumbnails.large.width}
+          srcWebP={getImageFor(record).url}
+          srcPNG={getImageFor(record).thumbnails.large.url}
         />
         <h3 style={{ color: type === "light" ? "black" : "white" }}>
-          {item.fields.Title}
+          {record.fields.Title}
         </h3>
         <h5 style={{ color: type === "light" ? "black" : "white" }}>
-          {item.fields.Description}
+          {record.fields.Description}
         </h5>
       </div>
     </Link>
@@ -52,7 +53,7 @@ const FullPortfolio: NextPage<FullPortfolioProps> = ({ data }) => {
         ref={gridRef}
         style={{ opacity: gridWidth ? 1 : 0 }}
       >
-        {data.map((item: any) => createItem(item))}
+        {records.map((record) => createItem(record))}
       </div>
     </>
   )
@@ -60,10 +61,14 @@ const FullPortfolio: NextPage<FullPortfolioProps> = ({ data }) => {
 
 export const getStaticProps: GetStaticProps = async () => ({
   props: {
-    data: (await fetchAirtable("Portfolio", undefined, undefined, true))
-      .records,
+    records: ((await fetchAirtable(
+      "Portfolio",
+      undefined,
+      undefined,
+      true
+    )) as CompactResponse).records,
   },
   revalidate: 5,
 })
 
-export default FullPortfolio
+export default PortfolioPage

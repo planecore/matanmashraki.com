@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react"
 
-export default function useScreenWidth(
-  updateOnlyWhenGetsBigger: boolean = true
-) {
+const useScreenWidth = (updateOnlyWhenGetsBigger: boolean = true) => {
   const [screenWidth, setScreenWidth] = useState(0)
 
   useEffect(() => {
@@ -22,3 +20,5 @@ export default function useScreenWidth(
     screenWidth,
   }
 }
+
+export default useScreenWidth

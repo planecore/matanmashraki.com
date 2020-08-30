@@ -12,8 +12,9 @@ import {
 import ReCAPTCHA from "react-google-recaptcha"
 import { NextPage } from "next"
 import Head from "../components/Head"
+import { ContactResponse } from "../data/types"
 
-const Contact: NextPage = () => {
+const ContactPage: NextPage = () => {
   const { type } = useTheme()
   const [, setToast] = useToasts()
   const form = useRef<HTMLFormElement>(null)
@@ -55,11 +56,11 @@ const Contact: NextPage = () => {
   const validateEmail = (email: string) =>
     /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email.toLowerCase())
 
-  const handleResponse = (json: any) => {
+  const handleResponse = (res: ContactResponse) => {
     setLoading(false)
     setCaptcha(null)
     recaptchaRef.current?.reset()
-    if (json && !!json.success && json.success === true) {
+    if (res.success) {
       name.setState("")
       email.setState("")
       subject.setState("")
@@ -70,7 +71,7 @@ const Contact: NextPage = () => {
       })
     } else {
       setToast({
-        text: json?.error?.message ?? "Unknown error occurred.",
+        text: res.error?.message ?? "Unknown error occurred.",
         type: "error",
       })
     }
@@ -111,7 +112,15 @@ const Contact: NextPage = () => {
     })
       .then((res) => res.json())
       .then((json) => handleResponse(json))
-      .catch(() => handleResponse(null))
+      .catch(() =>
+        handleResponse({
+          success: false,
+          error: {
+            type: "UNKNOWN_ERROR",
+            message: "Unknown error occurred.",
+          },
+        })
+      )
   }
 
   return (
@@ -160,4 +169,4 @@ const Contact: NextPage = () => {
   )
 }
 
-export default Contact
+export default ContactPage

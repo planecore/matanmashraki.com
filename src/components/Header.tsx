@@ -8,6 +8,8 @@ type HeaderProps = {
   routerEventURL?: string
 }
 
+const calculateBase = (fullpath: string) => `/${fullpath.split("/")[1]}`
+
 const Header = ({ routerEventURL }: HeaderProps) => {
   const { type } = useTheme()
   const { setThemeMode } = useContext<ThemeContextType>(ThemeContext)
@@ -35,10 +37,6 @@ const Header = ({ routerEventURL }: HeaderProps) => {
     const content = ref.querySelector(".content")
     if (content) content.remove()
   }, [headerRef])
-
-  function calculateBase(fullpath: string) {
-    return `/${fullpath.split("/")[1]}`
-  }
 
   useEffect(() => {
     setPath(pathname)

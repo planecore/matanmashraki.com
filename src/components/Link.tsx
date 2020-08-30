@@ -5,7 +5,7 @@ type LinkProps = {
   href: string
   as?: string
   style?: CSSProperties
-  children: any
+  children: JSX.Element | [JSX.Element]
 }
 
 const Link = ({ href, as, style, children }: LinkProps) => (

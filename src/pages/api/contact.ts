@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import FormData from "form-data"
+import { ContactBody } from "../../data/types"
 
 const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID
 const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY
@@ -58,8 +59,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   }
 }
 
-async function fillAirtable(data: any, res: NextApiResponse) {
-  return fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/Contact`, {
+const fillAirtable = async (data: ContactBody, res: NextApiResponse) =>
+  fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/Contact`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${AIRTABLE_API_KEY}`,
@@ -71,8 +72,8 @@ async function fillAirtable(data: any, res: NextApiResponse) {
           fields: {
             Subject: data.subject,
             Name: data.name,
-            "Email Address": data.email,
             Message: data.message,
+            "Email Address": data.email,
           },
         },
       ],
@@ -97,9 +98,8 @@ async function fillAirtable(data: any, res: NextApiResponse) {
         })
       )
     )
-}
 
-async function verifyReCAPTCHA(response: string) {
+const verifyReCAPTCHA = async (response: string): Promise<boolean> => {
   const data = new FormData()
   data.append("secret", ReCAPTCHA_SECRET)
   data.append("response", response)
