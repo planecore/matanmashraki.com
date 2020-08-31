@@ -2,7 +2,7 @@ import { NextPage, GetStaticProps } from "next"
 import { useEffect, useState } from "react"
 import { useTheme, Row, Col, Text } from "@geist-ui/react"
 import Link from "../../components/Link"
-import useScreenWidth from "../../hooks/useScreenWidth"
+import useWindowWidth from "../../hooks/useWindowWidth"
 import ImageDisplay from "../../components/ImageDisplay"
 import Head from "../../components/Head"
 import fetchAirtable from "../../data/fetchAirtable"
@@ -14,7 +14,7 @@ type BlogPageProps = {
 
 const BlogPage: NextPage<BlogPageProps> = ({ records }) => {
   const { type } = useTheme()
-  const { screenWidth } = useScreenWidth(false)
+  const { windowWidth } = useWindowWidth(false)
   const [showView, setShowView] = useState(false)
 
   useEffect(() => {
@@ -81,7 +81,7 @@ const BlogPage: NextPage<BlogPageProps> = ({ records }) => {
       as={`/blog/${record.fields.Path}`}
       href="/blog/[article]"
     >
-      {screenWidth < 700 ? createSmallItem(record) : createBigItem(record)}
+      {windowWidth < 700 ? createSmallItem(record) : createBigItem(record)}
     </Link>
   )
 
@@ -89,7 +89,7 @@ const BlogPage: NextPage<BlogPageProps> = ({ records }) => {
     <>
       <Head title="Blog" />
       <div
-        className={screenWidth < 700 ? "grid" : ""}
+        className={windowWidth < 700 ? "grid" : ""}
         style={{ opacity: showView ? 1 : 0 }}
       >
         {records.map((record) => createItem(record))}

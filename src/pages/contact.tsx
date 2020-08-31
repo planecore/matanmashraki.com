@@ -18,10 +18,12 @@ const ContactPage: NextPage = () => {
   const { type } = useTheme()
   const [, setToast] = useToasts()
   const form = useRef<HTMLFormElement>(null)
+
   const name = useInput("")
   const email = useInput("")
   const subject = useInput("")
   const message = useInput("")
+
   const [captcha, setCaptcha] = useState<string | null>(null)
   const recaptchaRef = useRef<ReCAPTCHA | null>(null)
   const [loading, setLoading] = useState(false)
@@ -39,6 +41,7 @@ const ContactPage: NextPage = () => {
     })
   }
 
+  // changes some elements sizes
   useEffect(() => {
     if (!form.current) return
     ;[...form.current.querySelectorAll("div > span")].forEach((item: any) => {
@@ -53,40 +56,26 @@ const ContactPage: NextPage = () => {
     )
   }, [form])
 
-  const validateEmail = (email: string) =>
-    /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email.toLowerCase())
-
-  const handleResponse = (res: ContactResponse) => {
-    setLoading(false)
-    setCaptcha(null)
-    recaptchaRef.current?.reset()
-    if (res.success) {
-      name.setState("")
-      email.setState("")
-      subject.setState("")
-      message.setState("")
-      setToast({
-        text: "Your message has been sent!",
-        type: "success",
-      })
-    } else {
-      setToast({
-        text: res.error?.message ?? "Unknown error occurred.",
-        type: "error",
-      })
-    }
-  }
+  /**
+   * Validates if the input is an email address
+   * @param input email address to test
+   */
+  const validateEmail = (input: string) =>
+    /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(input.toLowerCase())
 
   const sendMessage = (e: FormEvent) => {
     e.preventDefault()
+    // check captcha
     if (!captcha) {
       setToast({ text: "Please verify you're not a bot." })
       return
     }
+    // check if email is valid
     if (!validateEmail(email.state)) {
       setToast({ text: "The email you provided is not valid.", type: "error" })
       return
     }
+    // check if user filled the whole form
     if (
       subject.state === "" ||
       name.state === "" ||
@@ -96,6 +85,7 @@ const ContactPage: NextPage = () => {
       setToast({ text: "Please fill all the fields.", type: "error" })
       return
     }
+    // send request to the API
     setLoading(true)
     const baseURL = `${window.location.protocol}//${window.location.host}`
     fetch(`${baseURL}/api/contact`, {
@@ -121,6 +111,31 @@ const ContactPage: NextPage = () => {
           },
         })
       )
+  }
+
+  const handleResponse = (res: ContactResponse) => {
+    // reset captcha
+    setLoading(false)
+    setCaptcha(null)
+    recaptchaRef.current?.reset()
+    if (res.success) {
+      // if the message was sent successfully,
+      // clean the form
+      name.setState("")
+      email.setState("")
+      subject.setState("")
+      message.setState("")
+      setToast({
+        text: "Your message has been sent!",
+        type: "success",
+      })
+    } else {
+      // show an error on fail
+      setToast({
+        text: res.error?.message ?? "Unknown error occurred.",
+        type: "error",
+      })
+    }
   }
 
   return (

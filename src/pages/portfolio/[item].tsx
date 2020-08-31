@@ -5,7 +5,7 @@ import ReactMarkdown from "react-markdown"
 import { Download, Code, ArrowLeft } from "@geist-ui/react-icons"
 import Link from "../../components/Link"
 import ImageDisplay from "../../components/ImageDisplay"
-import useScreenWidth from "../../hooks/useScreenWidth"
+import useWindowWidth from "../../hooks/useWindowWidth"
 import Head from "../../components/Head"
 import fetchAirtable from "../../data/fetchAirtable"
 import { useState, useEffect } from "react"
@@ -21,7 +21,7 @@ type PortfolioItemPageProps = {
 }
 
 const PortfolioItemPage: NextPage<PortfolioItemPageProps> = ({ record }) => {
-  const { screenWidth } = useScreenWidth()
+  const { windowWidth } = useWindowWidth()
   const [showView, setShowView] = useState(false)
   const { isFallback } = useRouter()
 
@@ -40,7 +40,7 @@ const PortfolioItemPage: NextPage<PortfolioItemPageProps> = ({ record }) => {
         style={{ marginBottom: -20, maxWidth: 525 }}
         scale={0.9}
         alt={`${record.fields.Title} Cover`}
-        parentWidth={screenWidth}
+        parentWidth={windowWidth}
         height={getImageFor(record).thumbnails.large.height}
         width={getImageFor(record).thumbnails.large.width}
         srcWebP={getImageFor(record).url}

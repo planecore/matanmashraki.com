@@ -8,6 +8,7 @@ export type ThemeContextType = {
   setThemeMode: (value: "auto" | "light" | "dark") => void
 }
 
+/** Stores and updates the current theme */
 export const ThemeContext = createContext<ThemeContextType>({
   theme: "light",
   setThemeMode: (val) => console.log(val),
@@ -18,29 +19,42 @@ type LayoutProps = {
 }
 
 const Layout = ({ children }: LayoutProps) => {
+  // selected option from the theme switcher in Header,
+  // defaults to auto
   const [options, setOptions] = useState<"auto" | "light" | "dark">("auto")
+  // the current theme
   const [theme, setTheme] = useState<"light" | "dark">("light")
+
+  // indicates if the loading indicator should appear
   const [isLoading, setIsLoading] = useState(false)
-  const [routerEventURL, setRouterEventURL] = useState<string | undefined>()
+  // used to inform the Header about route changes
+  const [routerEventPath, setRouterEventPath] = useState<string | undefined>()
+  // used to listen to events
   const { events } = useRouter()
 
   useEffect(() => {
+    // get initial values for theme
     setOptions(getSelectedTheme())
     setTheme(getSystemTheme())
 
+    /** Informs about the beginning of a route change */
     const handleStart = (url: string) => {
-      setRouterEventURL(url)
+      setRouterEventPath(url)
       setIsLoading(true)
     }
+
+    /** Informs about the ending of a route change */
     const handleEnd = () => {
-      setRouterEventURL(undefined)
+      setRouterEventPath(undefined)
       setIsLoading(false)
     }
 
+    // adds listeners to route events
     events.on("routeChangeStart", handleStart)
     events.on("routeChangeComplete", handleEnd)
     events.on("routeChangeError", handleEnd)
 
+    // removes listeners to route events
     return () => {
       events.off("routeChangeStart", handleStart)
       events.off("routeChangeComplete", handleEnd)
@@ -48,15 +62,21 @@ const Layout = ({ children }: LayoutProps) => {
     }
   }, [])
 
+  /**
+   * Returns the theme the user selected. If the user didn't
+   * select a theme, the system theme will be used
+   */
   const getSelectedTheme = () =>
     (window.localStorage.getItem("theme") ?? "auto") as
       | "auto"
       | "light"
       | "dark"
 
+  /** Returns the current system theme */
   const getSystemTheme = () =>
     window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
 
+  // used to handle theme changes
   useEffect(() => {
     // if options set to manual, switch the theme
     if (options !== "auto") {
@@ -90,7 +110,7 @@ const Layout = ({ children }: LayoutProps) => {
       >
         <Page>
           <Page.Header style={{ height: 77.66 }}>
-            <Header routerEventURL={routerEventURL} />
+            <Header routerEventPath={routerEventPath} />
             <div
               className="header-background"
               style={{ backgroundColor: theme === "light" ? "white" : "black" }}

@@ -1,5 +1,6 @@
 import NotFound from "../components/NotFound"
+import { NextPage } from "next"
 
-const NotFoundPage = () => <NotFound />
+const NotFoundPage: NextPage = () => <NotFound />
 
 export default NotFoundPage

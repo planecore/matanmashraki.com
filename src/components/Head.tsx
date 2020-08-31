@@ -7,6 +7,7 @@ type HeadProps = {
   children?: JSX.Element | [JSX.Element]
 }
 
+/** Creates meta tags for a page. */
 const Head = ({
   title,
   desc = "18 y/o developer from Israel",

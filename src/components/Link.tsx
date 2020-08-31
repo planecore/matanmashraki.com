@@ -8,6 +8,7 @@ type LinkProps = {
   children: JSX.Element | [JSX.Element]
 }
 
+/** Next Link wrapper, used to add a cursor */
 const Link = ({ href, as, style, children }: LinkProps) => (
   <div style={{ cursor: "pointer", ...style }}>
     <NextLink.default as={as} href={href}>

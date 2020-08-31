@@ -99,6 +99,11 @@ const HomePage: NextPage<HomePageProps> = ({ portfolio, blog }) => {
   const getImageFor = (record: CompactRecord) =>
     record.fields.Attachments.find((elem) => elem.filename === "Cover.webp")
 
+  /**
+   * Creates an item for a Portfolio record
+   * @param record Record to create an item for
+   * @param index Used to add left margin for the first item
+   */
   const createPortfolioItem = (record: CompactRecord, index: number) => (
     <Link
       key={record.id}
@@ -166,6 +171,11 @@ const HomePage: NextPage<HomePageProps> = ({ portfolio, blog }) => {
     </>
   )
 
+  /**
+   * Creates an item for a Blog record
+   * @param record Record to create an item for
+   * @param index Used to add left margin for the first item
+   */
   const createBlogItem = (record: CompactRecord, index: number) => (
     <Link
       key={record.id}

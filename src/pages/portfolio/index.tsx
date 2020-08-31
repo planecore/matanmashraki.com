@@ -2,7 +2,7 @@ import { NextPage, GetStaticProps } from "next"
 import { useTheme } from "@geist-ui/react"
 import Link from "../../components/Link"
 import ImageDisplay from "../../components/ImageDisplay"
-import useGridWidth from "../../hooks/useGridWidth"
+import useGridWidth from "../../hooks/useGridItemWidth"
 import Head from "../../components/Head"
 import fetchAirtable from "../../data/fetchAirtable"
 import { CompactRecord, CompactResponse } from "../../data/types"
@@ -13,7 +13,7 @@ type PortfolioPageProps = {
 
 const PortfolioPage: NextPage<PortfolioPageProps> = ({ records }) => {
   const { type } = useTheme()
-  const { gridWidth, gridRef } = useGridWidth()
+  const { gridItemWidth, gridRef } = useGridWidth()
 
   const getImageFor = (record: CompactRecord) =>
     record.fields.Attachments.find((elem) => elem.filename === "Cover.webp")
@@ -29,7 +29,7 @@ const PortfolioPage: NextPage<PortfolioPageProps> = ({ records }) => {
           style={{ marginBottom: -25 }}
           scale={0.9}
           alt={`${record.fields.Title} Cover`}
-          parentWidth={gridWidth ?? 0}
+          parentWidth={gridItemWidth ?? 0}
           height={getImageFor(record).thumbnails.large.height}
           width={getImageFor(record).thumbnails.large.width}
           srcWebP={getImageFor(record).url}
@@ -51,7 +51,7 @@ const PortfolioPage: NextPage<PortfolioPageProps> = ({ records }) => {
       <div
         className="grid"
         ref={gridRef}
-        style={{ opacity: gridWidth ? 1 : 0 }}
+        style={{ opacity: gridItemWidth ? 1 : 0 }}
       >
         {records.map((record) => createItem(record))}
       </div>

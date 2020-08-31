@@ -5,32 +5,48 @@ import { ThemeContextType, ThemeContext } from "./Layout"
 import { Sun, Moon, Droplet } from "@geist-ui/react-icons"
 
 type HeaderProps = {
-  routerEventURL?: string
+  routerEventPath?: string
 }
 
+/**
+ * Calculates the base path to highlight
+ * its tab in the header
+ * @example "/blog/article" becomes "/blog"
+ * @param fullpath Current path from Router
+ * @returns Base path
+ */
 const calculateBase = (fullpath: string) => `/${fullpath.split("/")[1]}`
 
-const Header = ({ routerEventURL }: HeaderProps) => {
+/**
+ * Create a header at the top of the page
+ * @param routerEventPath Path from router events, used between route changes
+ */
+const Header = ({ routerEventPath }: HeaderProps) => {
   const { type } = useTheme()
   const { setThemeMode } = useContext<ThemeContextType>(ThemeContext)
   const [selectedTheme, setSelectedTheme] = useState<string>("auto")
+
   const { pathname, push } = useRouter()
   const [path, setPath] = useState(pathname)
   const headerRef = createRef<HTMLDivElement>()
+
   const [base, setBase] = useState(calculateBase(pathname))
 
+  // used to switch to the selected tab
   useEffect(() => {
     if (pathname !== path) push(path)
   }, [path])
 
+  // used to react to router events between route changes
   useEffect(() => {
-    if (routerEventURL) setBase(calculateBase(routerEventURL))
+    if (routerEventPath) setBase(calculateBase(routerEventPath))
     else {
       setPath(pathname)
       setBase(calculateBase(pathname))
     }
-  }, [routerEventURL])
+  }, [routerEventPath])
 
+  // used to remove empty space under the tabs
   useEffect(() => {
     const ref = headerRef.current
     if (!ref) return
@@ -38,15 +54,20 @@ const Header = ({ routerEventURL }: HeaderProps) => {
     if (content) content.remove()
   }, [headerRef])
 
+  // used to highlight the selected tab from router change
   useEffect(() => {
     setPath(pathname)
     setBase(calculateBase(pathname))
   }, [pathname])
 
+  // used to get the theme the user selected.
+  // if the user didn't select a theme, the
+  // system theme will be used.
   useEffect(() => {
     setSelectedTheme(window.localStorage.getItem("theme") ?? "auto")
   }, [])
 
+  // used to detect manual theme changes
   useEffect(() => {
     setThemeMode(selectedTheme as "auto" | "light" | "dark")
     window.localStorage.removeItem("theme")
@@ -55,7 +76,8 @@ const Header = ({ routerEventURL }: HeaderProps) => {
     }
   }, [selectedTheme, setThemeMode])
 
-  const createLabel = (title: string, icon: JSX.Element) => (
+  /** Creates a label to be used in the theme switcher */
+  const createThemeLabel = (title: string, icon: JSX.Element) => (
     <Row justify="center">
       <div style={{ marginRight: 5, marginTop: 3 }}>{icon}</div>
       <div style={{ marginTop: 1 }}>{title}</div>
@@ -86,13 +108,13 @@ const Header = ({ routerEventURL }: HeaderProps) => {
         pure
       >
         <Select.Option value="auto">
-          {createLabel("Automatic", <Droplet size={14} />)}
+          {createThemeLabel("Automatic", <Droplet size={14} />)}
         </Select.Option>
         <Select.Option value="light">
-          {createLabel("Light", <Sun size={14} />)}
+          {createThemeLabel("Light", <Sun size={14} />)}
         </Select.Option>
         <Select.Option value="dark">
-          {createLabel("Dark", <Moon size={14} />)}
+          {createThemeLabel("Dark", <Moon size={14} />)}
         </Select.Option>
       </Select>
     </div>

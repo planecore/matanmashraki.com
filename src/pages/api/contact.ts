@@ -6,8 +6,13 @@ const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID
 const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY
 const ReCAPTCHA_SECRET = process.env.ReCAPTCHA_SECRET
 
+/**
+ * Gets contact information and message,
+ * and adds it to Airtable
+ */
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (!req.url) return
+  // allow only POST
   if (req.method !== "POST") {
     return res.status(400).end(
       JSON.stringify({
@@ -19,6 +24,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       })
     )
   }
+  // check ReCAPTCHA token
   const token = req.headers["recaptcha"]
   if (!token) {
     return res.status(400).end(
@@ -43,6 +49,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       })
     )
   }
+  // fill contact information in Airtable
   const json = JSON.parse(req.body)
   if (json && json.subject && json.name && json.email && json.message) {
     return await fillAirtable(json, res)
@@ -59,6 +66,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   }
 }
 
+/**
+ * Fills contact information and message in Airtable
+ * @param data information to store in Airtable
+ * @param res used to send response
+ */
 const fillAirtable = async (data: ContactBody, res: NextApiResponse) =>
   fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/Contact`, {
     method: "POST",
@@ -99,6 +111,10 @@ const fillAirtable = async (data: ContactBody, res: NextApiResponse) =>
       )
     )
 
+/**
+ * Checks if the ReCAPTCHA token is valid
+ * @param response token from ReCAPTCHA on the website
+ */
 const verifyReCAPTCHA = async (response: string): Promise<boolean> => {
   const data = new FormData()
   data.append("secret", ReCAPTCHA_SECRET)

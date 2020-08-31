@@ -5,7 +5,7 @@ import NotFound from "../../components/NotFound"
 import ReactMarkdown from "react-markdown/with-html"
 import { ArrowLeft } from "@geist-ui/react-icons"
 import Link from "../../components/Link"
-import useScreenWidth from "../../hooks/useScreenWidth"
+import useWindowWidth from "../../hooks/useWindowWidth"
 import ImageDisplay from "../../components/ImageDisplay"
 import Head from "../../components/Head"
 import fetchAirtable from "../../data/fetchAirtable"
@@ -17,7 +17,7 @@ type BlogArticlePageProps = {
 }
 
 const BlogArticlePage: NextPage<BlogArticlePageProps> = ({ record }) => {
-  const { screenWidth } = useScreenWidth()
+  const { windowWidth } = useWindowWidth()
   const [showView, setShowView] = useState(false)
   const { isFallback } = useRouter()
 
@@ -36,7 +36,7 @@ const BlogArticlePage: NextPage<BlogArticlePageProps> = ({ record }) => {
         style={{ marginBottom: -10, maxWidth: 525 }}
         scale={0.9}
         alt={`${record.fields.Title} Cover`}
-        parentWidth={screenWidth}
+        parentWidth={windowWidth}
         height={getImageFor(record).thumbnails.large.height}
         width={getImageFor(record).thumbnails.large.width}
         srcWebP={getImageFor(record).url}

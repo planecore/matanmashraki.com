@@ -58,8 +58,8 @@ type CompactFields = {
 
 type PortfolioRecordFields = {
   Order: number
-  Platform: string
   Content: string
+  Platform: string
   PrimaryButton: string
   SecondButton: string
 }

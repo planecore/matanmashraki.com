@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, CSSProperties } from "react"
 import { Display, Image } from "@geist-ui/react"
 
 type ImageDisplayProps = {
   srcWebP: string
   srcPNG: string
   alt: string
-  style?: object
+  style?: CSSProperties
   parentWidth: number
   width: number
   height: number
@@ -17,6 +17,7 @@ type Size = {
   height?: number
 }
 
+/** Creates an image display with loading animation */
 const ImageDisplay = ({
   srcWebP,
   srcPNG,
@@ -29,6 +30,8 @@ const ImageDisplay = ({
 }: ImageDisplayProps) => {
   const [size, setSize] = useState<Size>({})
 
+  // used to calculate the image size during the
+  // loading animation
   useEffect(() => {
     if (parentWidth === 0) return
     setSize({
