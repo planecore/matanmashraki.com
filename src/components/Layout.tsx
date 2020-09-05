@@ -109,6 +109,7 @@ const Layout = ({ children }: LayoutProps) => {
         value={{ theme, setThemeMode: (val) => setOptions(val) }}
       >
         <Page>
+          {/** page header and background */}
           <Page.Header style={{ height: 77.66 }}>
             <Header routerEventPath={routerEventPath} />
             <div
@@ -117,9 +118,11 @@ const Layout = ({ children }: LayoutProps) => {
             />
           </Page.Header>
           <Page.Content>
+            {/** show loading indicator on route changes */}
             <div className="center" style={{ opacity: isLoading ? 1 : 0 }}>
               <Spinner size="large" />
             </div>
+            {/** main content */}
             <div style={{ opacity: isLoading ? 0 : 1, marginTop: -50 }}>
               {children}
             </div>

@@ -27,7 +27,7 @@ const BlogArticlePage: NextPage<BlogArticlePageProps> = ({ record }) => {
     }, 25)
   }, [])
 
-  const getImageFor = (record: BlogRecord) =>
+  const getImage = () =>
     record.fields.Attachments.find((elem) => elem.filename === "Cover.webp")
 
   const createItem = (record: BlogRecord) => (
@@ -37,10 +37,10 @@ const BlogArticlePage: NextPage<BlogArticlePageProps> = ({ record }) => {
         scale={0.9}
         alt={`${record.fields.Title} Cover`}
         parentWidth={windowWidth}
-        height={getImageFor(record).thumbnails.large.height}
-        width={getImageFor(record).thumbnails.large.width}
-        srcWebP={getImageFor(record).url}
-        srcPNG={getImageFor(record).thumbnails.large.url}
+        height={getImage().thumbnails.large.height}
+        width={getImage().thumbnails.large.width}
+        srcWebP={getImage().url}
+        srcPNG={getImage().thumbnails.large.url}
       />
       <Text type="secondary" style={{ marginBottom: -5 }}>
         {record.fields.Date}
@@ -57,7 +57,7 @@ const BlogArticlePage: NextPage<BlogArticlePageProps> = ({ record }) => {
       <Head
         title={record.fields.Title}
         desc={record.fields.Description}
-        image={getImageFor(record).thumbnails.large.url}
+        image={getImage().thumbnails.large.url}
       />
       <div style={{ opacity: showView ? 1 : 0 }}>
         <Link href="/blog">

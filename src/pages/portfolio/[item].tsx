@@ -31,7 +31,7 @@ const PortfolioItemPage: NextPage<PortfolioItemPageProps> = ({ record }) => {
     }, 25)
   }, [])
 
-  const getImageFor = (record: PortfolioRecord) =>
+  const getImage = () =>
     record.fields.Attachments.find((elem) => elem.filename === "Cover.webp")
 
   const createItem = (record: PortfolioRecord) => (
@@ -41,10 +41,10 @@ const PortfolioItemPage: NextPage<PortfolioItemPageProps> = ({ record }) => {
         scale={0.9}
         alt={`${record.fields.Title} Cover`}
         parentWidth={windowWidth}
-        height={getImageFor(record).thumbnails.large.height}
-        width={getImageFor(record).thumbnails.large.width}
-        srcWebP={getImageFor(record).url}
-        srcPNG={getImageFor(record).thumbnails.large.url}
+        height={getImage().thumbnails.large.height}
+        width={getImage().thumbnails.large.width}
+        srcWebP={getImage().url}
+        srcPNG={getImage().thumbnails.large.url}
       />
       <h1>{record.fields.Title}</h1>
       <h2 style={{ marginTop: -15 }}>{record.fields.Description}</h2>
@@ -80,7 +80,7 @@ const PortfolioItemPage: NextPage<PortfolioItemPageProps> = ({ record }) => {
       <Head
         title={record.fields.Title}
         desc={record.fields.Description}
-        image={getImageFor(record).thumbnails.large.url}
+        image={getImage().thumbnails.large.url}
       />
       <div style={{ opacity: showView ? 1 : 0 }}>
         <Link href="/portfolio">

@@ -15,17 +15,25 @@ import Head from "../components/Head"
 import { ContactResponse } from "../data/types"
 
 const ContactPage: NextPage = () => {
+  // current theme
   const { type } = useTheme()
+  // used to show response from the server
   const [, setToast] = useToasts()
+  // used to change some elements sizes in the form
   const form = useRef<HTMLFormElement>(null)
 
+  // form inputs
   const name = useInput("")
   const email = useInput("")
   const subject = useInput("")
   const message = useInput("")
 
+  // captcha state
   const [captcha, setCaptcha] = useState<string | null>(null)
   const recaptchaRef = useRef<ReCAPTCHA | null>(null)
+
+  // true while sending a request to the server
+  // and waiting for response
   const [loading, setLoading] = useState(false)
 
   const onReCAPTCHAChange = (token: string | null) => {

@@ -16,16 +16,9 @@ const useGridItemWidth = () => {
       if (!parent) return
       setGridItemWidth((parent.item(0) as any).offsetWidth)
     }
+    resizeListener()
     window.addEventListener("resize", resizeListener)
     return () => window.removeEventListener("resize", resizeListener)
-    // eslint-disable-next-line
-  }, [gridRef])
-
-  useEffect(() => {
-    // get first item width
-    const parent = gridRef.current?.childNodes
-    if (!parent) return
-    setGridItemWidth((parent.item(0) as any).offsetWidth)
   }, [gridRef])
 
   return {
