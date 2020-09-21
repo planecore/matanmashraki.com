@@ -1,5 +1,6 @@
 import React, { useEffect, useState, CSSProperties } from "react"
 import { Display, Image } from "@geist-ui/react"
+import Bowser from "bowser"
 
 type ImageDisplayProps = {
   srcWebP: string
@@ -46,7 +47,13 @@ const ImageDisplay = ({
         <Display shadow style={style}>
           <Image
             alt={alt}
-            src={(window as any).safari ? srcPNG : srcWebP}
+            src={
+              Bowser.getParser(window.navigator.userAgent).satisfies({
+                safari: "<14",
+              })
+                ? srcPNG
+                : srcWebP
+            }
             width={size.width}
             height={size.height}
           />

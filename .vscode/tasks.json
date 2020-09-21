@@ -1,0 +1,19 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "command": "npm run dev",
+      "problemMatcher": [],
+      "label": "Run",
+      "detail": "Serves a local server"
+    },
+    {
+      "type": "shell",
+      "command": "npm run build",
+      "problemMatcher": [],
+      "label": "Build",
+      "detail": "Creates a production build"
+    }
+  ]
+}

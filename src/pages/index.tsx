@@ -30,6 +30,19 @@ type HomePageProps = {
 const HomePage: NextPage<HomePageProps> = ({ portfolio, blog }) => {
   const { type } = useTheme()
 
+  const title = (
+    <>
+      <h3>
+        Hello there! <Emoji symbol="👋" label="Waving hand" />
+      </h3>
+      <h2>I'm Matan Mashraki</h2>
+      <h3>
+        18 y/o developer Full Stack Developer from Israel{" "}
+        <Emoji symbol="🇮🇱" label="Israel flag" />
+      </h3>
+    </>
+  )
+
   const highlights = (
     <div style={{ marginTop: 25 }}>
       <Tag type="warning" style={{ margin: 3 }}>
@@ -84,13 +97,7 @@ const HomePage: NextPage<HomePageProps> = ({ portfolio, blog }) => {
 
   const main = (
     <div style={{ textAlign: "center", marginTop: 50 }}>
-      <h3>
-        Hello there! <Emoji symbol="👋" label="Waving hand" />
-      </h3>
-      <h2>I'm Matan Mashraki</h2>
-      <h3>
-        18 y/o developer from Israel <Emoji symbol="🇮🇱" label="Israel flag" />
-      </h3>
+      {title}
       {social}
       {highlights}
     </div>
