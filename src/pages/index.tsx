@@ -37,7 +37,7 @@ const HomePage: NextPage<HomePageProps> = ({ portfolio, blog }) => {
       </h3>
       <h2>I'm Matan Mashraki</h2>
       <h3>
-        18 y/o developer Full Stack Developer from Israel{" "}
+        18 y/o Full Stack Developer from Israel{" "}
         <Emoji symbol="🇮🇱" label="Israel flag" />
       </h3>
     </>
