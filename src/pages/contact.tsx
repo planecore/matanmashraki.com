@@ -43,8 +43,7 @@ const ContactPage: NextPage = () => {
   const onReCAPTCHAExpired = () => {
     setCaptcha(null)
     setToast({
-      text:
-        "ReCAPTCHA verification expired. You'll need to reverify again that you're not a bot",
+      text: "ReCAPTCHA verification expired. You'll need to reverify again that you're not a bot",
       type: "warning",
     })
   }
@@ -84,12 +83,7 @@ const ContactPage: NextPage = () => {
       return
     }
     // check if user filled the whole form
-    if (
-      subject.state === "" ||
-      name.state === "" ||
-      email.state === "" ||
-      message.state === ""
-    ) {
+    if (subject.state === "" || name.state === "" || email.state === "" || message.state === "") {
       setToast({ text: "Please fill all the fields.", type: "error" })
       return
     }
@@ -161,12 +155,7 @@ const ContactPage: NextPage = () => {
         <Spacer y={0.5} />
         <Input label="Subject" width="100%" {...subject.bindings} />
         <Spacer y={0.5} />
-        <Textarea
-          placeholder="Message"
-          width="100%"
-          minHeight="200px"
-          {...message.bindings}
-        />
+        <Textarea placeholder="Message" width="100%" minHeight="200px" {...message.bindings} />
         <Spacer y={0.5} />
         <Row justify="center" style={{ height: 78 }}>
           <ReCAPTCHA
@@ -178,13 +167,7 @@ const ContactPage: NextPage = () => {
           />
         </Row>
         <Spacer y={0.5} />
-        <Button
-          loading={loading}
-          shadow
-          type="secondary"
-          htmlType="submit"
-          style={{ width: 304 }}
-        >
+        <Button loading={loading} shadow type="secondary" htmlType="submit" style={{ width: 304 }}>
           Submit
         </Button>
       </form>

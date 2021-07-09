@@ -27,8 +27,7 @@ const BlogArticlePage: NextPage<BlogArticlePageProps> = ({ record }) => {
     }, 25)
   }, [])
 
-  const getImage = () =>
-    record.fields.Attachments.find((elem) => elem.filename === "Cover.webp")
+  const getImage = () => record.fields.Attachments.find((elem) => elem.filename === "Cover.webp")
 
   const createItem = (record: BlogRecord) => (
     <div style={{ textAlign: "center" }}>
@@ -46,9 +45,7 @@ const BlogArticlePage: NextPage<BlogArticlePageProps> = ({ record }) => {
         {record.fields.Date}
       </Text>
       <h1>{record.fields.Title}</h1>
-      <h2 style={{ marginTop: -15, marginBottom: 50 }}>
-        {record.fields.Description}
-      </h2>
+      <h2 style={{ marginTop: -15, marginBottom: 50 }}>{record.fields.Description}</h2>
     </div>
   )
 
@@ -61,11 +58,7 @@ const BlogArticlePage: NextPage<BlogArticlePageProps> = ({ record }) => {
       />
       <div style={{ opacity: showView ? 1 : 0 }}>
         <Link href="/blog">
-          <Button
-            type="abort"
-            icon={<ArrowLeft />}
-            style={{ marginLeft: -22, marginRight: -22 }}
-          >
+          <Button type="abort" icon={<ArrowLeft />} style={{ marginLeft: -22, marginRight: -22 }}>
             Back to Blog
           </Button>
         </Link>
@@ -87,24 +80,18 @@ const BlogArticlePage: NextPage<BlogArticlePageProps> = ({ record }) => {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => ({
-  paths: ((await fetchAirtable(
-    "Blog",
-    undefined,
-    undefined,
-    true
-  )) as CompactResponse).records.map((record) => ({
-    params: {
-      article: record.fields.Path,
-    },
-  })),
+  paths: ((await fetchAirtable("Blog", undefined, undefined, true)) as CompactResponse).records.map(
+    (record) => ({
+      params: {
+        article: record.fields.Path,
+      },
+    })
+  ),
   fallback: true,
 })
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
-  const res = ((await fetchAirtable(
-    "Blog",
-    ctx.params.article as string
-  )) as BlogResponse).records
+  const res = ((await fetchAirtable("Blog", ctx.params.article as string)) as BlogResponse).records
   return {
     props: {
       record: res && res[0] ? res[0] : null,

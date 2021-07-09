@@ -10,11 +10,7 @@ import Head from "../../components/Head"
 import fetchAirtable from "../../data/fetchAirtable"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/router"
-import {
-  CompactResponse,
-  PortfolioResponse,
-  PortfolioRecord,
-} from "../../data/types"
+import { CompactResponse, PortfolioResponse, PortfolioRecord } from "../../data/types"
 
 type PortfolioItemPageProps = {
   record: PortfolioRecord
@@ -31,8 +27,7 @@ const PortfolioItemPage: NextPage<PortfolioItemPageProps> = ({ record }) => {
     }, 25)
   }, [])
 
-  const getImage = () =>
-    record.fields.Attachments.find((elem) => elem.filename === "Cover.webp")
+  const getImage = () => record.fields.Attachments.find((elem) => elem.filename === "Cover.webp")
 
   const createItem = (record: PortfolioRecord) => (
     <div style={{ textAlign: "center" }}>
@@ -84,11 +79,7 @@ const PortfolioItemPage: NextPage<PortfolioItemPageProps> = ({ record }) => {
       />
       <div style={{ opacity: showView ? 1 : 0 }}>
         <Link href="/portfolio">
-          <Button
-            type="abort"
-            icon={<ArrowLeft />}
-            style={{ marginLeft: -22, marginRight: -22 }}
-          >
+          <Button type="abort" icon={<ArrowLeft />} style={{ marginLeft: -22, marginRight: -22 }}>
             Back to Portfolio
           </Button>
         </Link>
@@ -111,12 +102,9 @@ const PortfolioItemPage: NextPage<PortfolioItemPageProps> = ({ record }) => {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => ({
-  paths: ((await fetchAirtable(
-    "Portfolio",
-    undefined,
-    undefined,
-    true
-  )) as CompactResponse).records.map((record) => ({
+  paths: (
+    (await fetchAirtable("Portfolio", undefined, undefined, true)) as CompactResponse
+  ).records.map((record) => ({
     params: {
       item: record.fields.Path,
     },
@@ -125,10 +113,8 @@ export const getStaticPaths: GetStaticPaths = async () => ({
 })
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
-  const res = ((await fetchAirtable(
-    "Portfolio",
-    ctx.params.item as string
-  )) as PortfolioResponse).records
+  const res = ((await fetchAirtable("Portfolio", ctx.params.item as string)) as PortfolioResponse)
+    .records
   return {
     props: {
       record: res && res[0] ? res[0] : null,

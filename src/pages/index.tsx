@@ -1,26 +1,12 @@
-import {
-  Tag,
-  Row,
-  Col,
-  Button,
-  Display,
-  Description,
-  useTheme,
-  Image,
-} from "@geist-ui/react"
+import { Tag, Row, Col, Button, Display, Description, useTheme, Image } from "@geist-ui/react"
 import Emoji from "../components/Emoji"
 import Link from "../components/Link"
-import {
-  ArrowRight,
-  Github,
-  Twitter,
-  Linkedin,
-  Mail,
-} from "@geist-ui/react-icons"
+import { ArrowRight, Github, Twitter, Linkedin, Mail } from "@geist-ui/react-icons"
 import Head from "../components/Head"
 import { NextPage, GetStaticProps } from "next"
 import fetchAirtable from "../data/fetchAirtable"
 import { CompactResponse, CompactRecord } from "../data/types"
+import fetchAge from "../data/fetchAge"
 
 type HomePageProps = {
   portfolio: CompactResponse
@@ -37,8 +23,7 @@ const HomePage: NextPage<HomePageProps> = ({ portfolio, blog }) => {
       </h3>
       <h2>I'm Matan Mashraki</h2>
       <h3>
-        18 y/o Full Stack Developer from Israel{" "}
-        <Emoji symbol="🇮🇱" label="Israel flag" />
+        18 y/o Full Stack Developer from Israel <Emoji symbol="🇮🇱" label="Israel flag" />
       </h3>
     </>
   )
@@ -112,11 +97,7 @@ const HomePage: NextPage<HomePageProps> = ({ portfolio, blog }) => {
    * @param index Used to add left margin for the first item
    */
   const createPortfolioItem = (record: CompactRecord, index: number) => (
-    <Link
-      key={record.id}
-      as={`/portfolio/${record.fields.Path}`}
-      href="/portfolio/[item]"
-    >
+    <Link key={record.id} as={`/portfolio/${record.fields.Path}`} href="/portfolio/[item]">
       <div
         style={{
           textAlign: "left",
@@ -136,10 +117,7 @@ const HomePage: NextPage<HomePageProps> = ({ portfolio, blog }) => {
             src={getImageFor(record).thumbnails.large.url}
           />
         </Display>
-        <Description
-          title={record.fields.Title}
-          content={record.fields.Description}
-        />
+        <Description title={record.fields.Title} content={record.fields.Description} />
       </div>
     </Link>
   )
@@ -184,11 +162,7 @@ const HomePage: NextPage<HomePageProps> = ({ portfolio, blog }) => {
    * @param index Used to add left margin for the first item
    */
   const createBlogItem = (record: CompactRecord, index: number) => (
-    <Link
-      key={record.id}
-      as={`/blog/${record.fields.Path}`}
-      href="/blog/[article]"
-    >
+    <Link key={record.id} as={`/blog/${record.fields.Path}`} href="/blog/[article]">
       <div
         style={{
           textAlign: "left",
@@ -208,10 +182,7 @@ const HomePage: NextPage<HomePageProps> = ({ portfolio, blog }) => {
             src={getImageFor(record).thumbnails.large.url}
           />
         </Display>
-        <Description
-          title={record.fields.Title}
-          content={record.fields.Description}
-        />
+        <Description title={record.fields.Title} content={record.fields.Description} />
       </div>
     </Link>
   )
@@ -243,9 +214,7 @@ const HomePage: NextPage<HomePageProps> = ({ portfolio, blog }) => {
           marginTop: -40,
         }}
       >
-        {blog.records.map((record: CompactRecord, index: number) =>
-          createBlogItem(record, index)
-        )}
+        {blog.records.map((record: CompactRecord, index: number) => createBlogItem(record, index))}
       </Row>
     </>
   )
@@ -262,12 +231,7 @@ const HomePage: NextPage<HomePageProps> = ({ portfolio, blog }) => {
 
 export const getStaticProps: GetStaticProps = async () => ({
   props: {
-    portfolio: (await fetchAirtable(
-      "Portfolio",
-      undefined,
-      6,
-      true
-    )) as CompactResponse,
+    portfolio: (await fetchAirtable("Portfolio", undefined, 6, true)) as CompactResponse,
     blog: (await fetchAirtable("Blog", undefined, 6, true)) as CompactResponse,
   },
   revalidate: 5,

@@ -86,11 +86,7 @@ const Header = ({ routerEventPath }: HeaderProps) => {
 
   const logo = (
     <button onClick={() => setPath("/")} className="unstyled-button">
-      <img
-        src={type === "light" ? "/logo-color.svg" : "/logo-white.svg"}
-        height={25}
-        alt="Logo"
-      />
+      <img src={type === "light" ? "/logo-color.svg" : "/logo-white.svg"} height={25} alt="Logo" />
     </button>
   )
 
@@ -110,12 +106,8 @@ const Header = ({ routerEventPath }: HeaderProps) => {
         <Select.Option value="auto">
           {createThemeLabel("Automatic", <Droplet size={14} />)}
         </Select.Option>
-        <Select.Option value="light">
-          {createThemeLabel("Light", <Sun size={14} />)}
-        </Select.Option>
-        <Select.Option value="dark">
-          {createThemeLabel("Dark", <Moon size={14} />)}
-        </Select.Option>
+        <Select.Option value="light">{createThemeLabel("Light", <Sun size={14} />)}</Select.Option>
+        <Select.Option value="dark">{createThemeLabel("Dark", <Moon size={14} />)}</Select.Option>
       </Select>
     </div>
   )

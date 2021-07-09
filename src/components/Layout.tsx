@@ -67,10 +67,7 @@ const Layout = ({ children }: LayoutProps) => {
    * select a theme, the system theme will be used
    */
   const getSelectedTheme = () =>
-    (window.localStorage.getItem("theme") ?? "auto") as
-      | "auto"
-      | "light"
-      | "dark"
+    (window.localStorage.getItem("theme") ?? "auto") as "auto" | "light" | "dark"
 
   /** Returns the current system theme */
   const getSystemTheme = () =>
@@ -92,22 +89,16 @@ const Layout = ({ children }: LayoutProps) => {
     // run the listener on load
     changeTheme()
     // add listener to system theme changes
-    window
-      .matchMedia("(prefers-color-scheme: dark)")
-      .addListener(() => changeTheme())
+    window.matchMedia("(prefers-color-scheme: dark)").addListener(() => changeTheme())
     // remove listener on exit
     return () =>
-      window
-        .matchMedia("(prefers-color-scheme: dark)")
-        .removeListener(() => changeTheme())
+      window.matchMedia("(prefers-color-scheme: dark)").removeListener(() => changeTheme())
   }, [options])
 
   return (
     <GeistProvider theme={{ type: theme }}>
       <CssBaseline />
-      <ThemeContext.Provider
-        value={{ theme, setThemeMode: (val) => setOptions(val) }}
-      >
+      <ThemeContext.Provider value={{ theme, setThemeMode: (val) => setOptions(val) }}>
         <Page>
           {/** page header and background */}
           <Page.Header style={{ height: 77.66 }}>
@@ -123,9 +114,7 @@ const Layout = ({ children }: LayoutProps) => {
               <Spinner size="large" />
             </div>
             {/** main content */}
-            <div style={{ opacity: isLoading ? 0 : 1, marginTop: -50 }}>
-              {children}
-            </div>
+            <div style={{ opacity: isLoading ? 0 : 1, marginTop: -50 }}>{children}</div>
           </Page.Content>
         </Page>
       </ThemeContext.Provider>

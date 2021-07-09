@@ -40,12 +40,8 @@ const BlogPage: NextPage<BlogPageProps> = ({ records }) => {
       <Text h5 type="secondary">
         {record.fields.Date}
       </Text>
-      <h3 style={{ color: type === "light" ? "black" : "white" }}>
-        {record.fields.Title}
-      </h3>
-      <h5 style={{ color: type === "light" ? "black" : "white" }}>
-        {record.fields.Description}
-      </h5>
+      <h3 style={{ color: type === "light" ? "black" : "white" }}>{record.fields.Title}</h3>
+      <h5 style={{ color: type === "light" ? "black" : "white" }}>{record.fields.Description}</h5>
     </div>
   )
 
@@ -65,22 +61,14 @@ const BlogPage: NextPage<BlogPageProps> = ({ records }) => {
         <Text h5 type="secondary">
           {record.fields.Date}
         </Text>
-        <h2 style={{ color: type === "light" ? "black" : "white" }}>
-          {record.fields.Title}
-        </h2>
-        <h3 style={{ color: type === "light" ? "black" : "white" }}>
-          {record.fields.Description}
-        </h3>
+        <h2 style={{ color: type === "light" ? "black" : "white" }}>{record.fields.Title}</h2>
+        <h3 style={{ color: type === "light" ? "black" : "white" }}>{record.fields.Description}</h3>
       </Col>
     </Row>
   )
 
   const createItem = (record: CompactRecord) => (
-    <Link
-      key={record.id}
-      as={`/blog/${record.fields.Path}`}
-      href="/blog/[article]"
-    >
+    <Link key={record.id} as={`/blog/${record.fields.Path}`} href="/blog/[article]">
       {windowWidth < 700 ? createSmallItem(record) : createBigItem(record)}
     </Link>
   )
@@ -88,10 +76,7 @@ const BlogPage: NextPage<BlogPageProps> = ({ records }) => {
   return (
     <>
       <Head title="Blog" />
-      <div
-        className={windowWidth < 700 ? "grid" : ""}
-        style={{ opacity: showView ? 1 : 0 }}
-      >
+      <div className={windowWidth < 700 ? "grid" : ""} style={{ opacity: showView ? 1 : 0 }}>
         {records.map((record) => createItem(record))}
       </div>
     </>
@@ -100,12 +85,7 @@ const BlogPage: NextPage<BlogPageProps> = ({ records }) => {
 
 export const getStaticProps: GetStaticProps = async () => ({
   props: {
-    records: ((await fetchAirtable(
-      "Blog",
-      undefined,
-      undefined,
-      true
-    )) as CompactResponse).records,
+    records: ((await fetchAirtable("Blog", undefined, undefined, true)) as CompactResponse).records,
   },
   revalidate: 5,
 })
