@@ -151,7 +151,7 @@ const ContactPage: NextPage = () => {
         <Spacer y={0.5} />
         <Input label="Name" width="100%" {...name.bindings} />
         <Spacer y={0.5} />
-        <Input label="Email Address" width="100%" {...email.bindings} />
+        <Input label="Email Address" type="email" width="100%" {...email.bindings} />
         <Spacer y={0.5} />
         <Input label="Subject" width="100%" {...subject.bindings} />
         <Spacer y={0.5} />

@@ -11,9 +11,10 @@ import fetchAge from "../data/fetchAge"
 type HomePageProps = {
   portfolio: CompactResponse
   blog: CompactResponse
+  age: string
 }
 
-const HomePage: NextPage<HomePageProps> = ({ portfolio, blog }) => {
+const HomePage: NextPage<HomePageProps> = ({ portfolio, blog, age }) => {
   const { type } = useTheme()
 
   const title = (
@@ -23,7 +24,7 @@ const HomePage: NextPage<HomePageProps> = ({ portfolio, blog }) => {
       </h3>
       <h2>I'm Matan Mashraki</h2>
       <h3>
-        18 y/o Full Stack Developer from Israel <Emoji symbol="🇮🇱" label="Israel flag" />
+        {age} y/o Full Stack Developer from Israel <Emoji symbol="🇮🇱" label="Israel flag" />
       </h3>
     </>
   )
@@ -233,6 +234,7 @@ export const getStaticProps: GetStaticProps = async () => ({
   props: {
     portfolio: (await fetchAirtable("Portfolio", undefined, 6, true)) as CompactResponse,
     blog: (await fetchAirtable("Blog", undefined, 6, true)) as CompactResponse,
+    age: await fetchAge(),
   },
   revalidate: 5,
 })
