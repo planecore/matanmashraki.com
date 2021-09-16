@@ -6,6 +6,7 @@ import useGridWidth from "../../hooks/useGridItemWidth"
 import Head from "../../components/layout/Head"
 import fetchAirtable from "../../data/fetchAirtable"
 import { CompactRecord, CompactResponse } from "../../data/types"
+import getImageFor from "../../data/getImageFor"
 
 type PortfolioPageProps = {
   records: [CompactRecord]
@@ -14,9 +15,6 @@ type PortfolioPageProps = {
 const PortfolioPage: NextPage<PortfolioPageProps> = ({ records }) => {
   const { type } = useTheme()
   const { gridItemWidth, gridRef } = useGridWidth()
-
-  const getImageFor = (record: CompactRecord) =>
-    record.fields.Attachments.find((elem) => elem.filename === "Cover.webp")
 
   const createItem = (record: CompactRecord) => (
     <Link key={record.id} as={`/portfolio/${record.fields.Path}`} href="/portfolio/[item]">

@@ -7,6 +7,7 @@ import ImageDisplay from "../../components/utils/ImageDisplay"
 import Head from "../../components/layout/Head"
 import fetchAirtable from "../../data/fetchAirtable"
 import { CompactResponse, CompactRecord } from "../../data/types"
+import getImageFor from "../../data/getImageFor"
 
 type BlogPageProps = {
   records: [CompactRecord]
@@ -22,9 +23,6 @@ const BlogPage: NextPage<BlogPageProps> = ({ records }) => {
       setShowView(true)
     }, 25)
   }, [])
-
-  const getImageFor = (record: CompactRecord) =>
-    record.fields.Attachments.find((elem) => elem.filename === "Cover.webp")
 
   const createSmallItem = (record: CompactRecord) => (
     <div style={{ textAlign: "center" }}>

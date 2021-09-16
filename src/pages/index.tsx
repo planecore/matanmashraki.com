@@ -7,6 +7,7 @@ import { NextPage, GetStaticProps } from "next"
 import fetchAirtable from "../data/fetchAirtable"
 import { CompactResponse, CompactRecord } from "../data/types"
 import fetchAge from "../data/fetchAge"
+import PagesPreview from "../components/previews/PagesPreview"
 
 type HomePageProps = {
   portfolio: CompactResponse
@@ -81,143 +82,12 @@ const HomePage: NextPage<HomePageProps> = ({ portfolio, blog, age }) => {
     </div>
   )
 
-  const getImageFor = (record: CompactRecord) =>
-    record.fields.Attachments.find((elem) => elem.filename === "Cover.webp")
-
-  /**
-   * Creates an item for a Portfolio record
-   * @param record Record to create an item for
-   * @param index Used to add left margin for the first item
-   */
-  const createPortfolioItem = (record: CompactRecord, index: number) => (
-    <Link key={record.id} as={`/portfolio/${record.fields.Path}`} href="/portfolio/[item]">
-      <div
-        style={{
-          textAlign: "left",
-          float: "left",
-          width: 250,
-          marginRight: 10,
-          marginLeft: index === 0 ? 22 : 0,
-        }}
-      >
-        <Display style={{ marginBottom: -10 }}>
-          <Image
-            width={250}
-            height={167}
-            alt={`${record.fields.Title} Cover`}
-            // TODO: Change to `getImageFor(record).url` after iOS 14
-            // gets significant market share.
-            src={getImageFor(record).thumbnails.large.url}
-          />
-        </Display>
-        <Description title={record.fields.Title} content={record.fields.Description} />
-      </div>
-    </Link>
-  )
-
-  const portfolioPreview = (
-    <>
-      <Row style={{ marginTop: 100, zIndex: 50 }}>
-        <Col style={{ marginTop: 4 }}>
-          <h4>Portfolio</h4>
-        </Col>
-        <Col style={{ textAlign: "right" }}>
-          <Link href="/portfolio">
-            <Button
-              type="abort"
-              iconRight={<ArrowRight />}
-              style={{ marginLeft: -22, marginRight: -22 }}
-            >
-              Show Full Portfolio
-            </Button>
-          </Link>
-        </Col>
-      </Row>
-      <Row
-        style={{
-          height: 280,
-          overflow: "auto",
-          marginLeft: -22,
-          marginRight: -22,
-          marginTop: -40,
-        }}
-      >
-        {portfolio.records.map((record: CompactRecord, index: number) =>
-          createPortfolioItem(record, index)
-        )}
-      </Row>
-    </>
-  )
-
-  /**
-   * Creates an item for a Blog record
-   * @param record Record to create an item for
-   * @param index Used to add left margin for the first item
-   */
-  const createBlogItem = (record: CompactRecord, index: number) => (
-    <Link key={record.id} as={`/blog/${record.fields.Path}`} href="/blog/[article]">
-      <div
-        style={{
-          textAlign: "left",
-          float: "left",
-          width: 250,
-          marginRight: 10,
-          marginLeft: index === 0 ? 22 : 0,
-        }}
-      >
-        <Display style={{ marginBottom: -10 }}>
-          <Image
-            width={250}
-            height={167}
-            alt={`${record.fields.Title} Cover`}
-            // TODO: Change to `getImageFor(record).url` after iOS 14
-            // gets significant market share.
-            src={getImageFor(record).thumbnails.large.url}
-          />
-        </Display>
-        <Description title={record.fields.Title} content={record.fields.Description} />
-      </div>
-    </Link>
-  )
-
-  const blogPreview = (
-    <>
-      <Row style={{ marginTop: 100, zIndex: 50 }}>
-        <Col style={{ marginTop: 4 }}>
-          <h4>Blog</h4>
-        </Col>
-        <Col style={{ textAlign: "right" }}>
-          <Link href="/blog">
-            <Button
-              type="abort"
-              iconRight={<ArrowRight />}
-              style={{ marginLeft: -22, marginRight: -22 }}
-            >
-              Show Full Blog
-            </Button>
-          </Link>
-        </Col>
-      </Row>
-      <Row
-        style={{
-          height: 280,
-          overflow: "auto",
-          marginLeft: -22,
-          marginRight: -22,
-          marginTop: -40,
-        }}
-      >
-        {blog.records.map((record: CompactRecord, index: number) => createBlogItem(record, index))}
-      </Row>
-    </>
-  )
-
   return (
     <>
       <Head title="Home" />
       {main}
-      {portfolioPreview}
-      {blogPreview}
+      <PagesPreview title="Portfolio" response={portfolio} />
+      <PagesPreview title="Blog" response={blog} />
     </>
   )
 }
