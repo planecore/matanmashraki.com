@@ -1,9 +1,9 @@
 import { NextPage, GetStaticProps } from "next"
 import { useTheme } from "@geist-ui/react"
-import Link from "../../components/Link"
-import ImageDisplay from "../../components/ImageDisplay"
+import Link from "../../components/utils/Link"
+import ImageDisplay from "../../components/utils/ImageDisplay"
 import useGridWidth from "../../hooks/useGridItemWidth"
-import Head from "../../components/Head"
+import Head from "../../components/layout/Head"
 import fetchAirtable from "../../data/fetchAirtable"
 import { CompactRecord, CompactResponse } from "../../data/types"
 

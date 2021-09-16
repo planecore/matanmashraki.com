@@ -11,7 +11,7 @@ import {
 } from "@geist-ui/react"
 import ReCAPTCHA from "react-google-recaptcha"
 import { NextPage } from "next"
-import Head from "../components/Head"
+import Head from "../components/layout/Head"
 import { ContactResponse } from "../data/types"
 
 const ContactPage: NextPage = () => {

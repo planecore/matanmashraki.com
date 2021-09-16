@@ -1,10 +1,10 @@
 import { NextPage, GetStaticProps } from "next"
 import { useEffect, useState } from "react"
 import { useTheme, Row, Col, Text } from "@geist-ui/react"
-import Link from "../../components/Link"
+import Link from "../../components/utils/Link"
 import useWindowWidth from "../../hooks/useWindowWidth"
-import ImageDisplay from "../../components/ImageDisplay"
-import Head from "../../components/Head"
+import ImageDisplay from "../../components/utils/ImageDisplay"
+import Head from "../../components/layout/Head"
 import fetchAirtable from "../../data/fetchAirtable"
 import { CompactResponse, CompactRecord } from "../../data/types"
 

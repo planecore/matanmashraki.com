@@ -1,8 +1,8 @@
 import { Tag, Row, Col, Button, Display, Description, useTheme, Image } from "@geist-ui/react"
-import Emoji from "../components/Emoji"
-import Link from "../components/Link"
+import Emoji from "../components/utils/Emoji"
+import Link from "../components/utils/Link"
 import { ArrowRight, Github, Twitter, Linkedin, Mail } from "@geist-ui/react-icons"
-import Head from "../components/Head"
+import Head from "../components/layout/Head"
 import { NextPage, GetStaticProps } from "next"
 import fetchAirtable from "../data/fetchAirtable"
 import { CompactResponse, CompactRecord } from "../data/types"
@@ -13,6 +13,8 @@ type HomePageProps = {
   blog: CompactResponse
   age: string
 }
+
+const skills = ["React", "Swift", "NodeJS", "Firebase", "Designer"]
 
 const HomePage: NextPage<HomePageProps> = ({ portfolio, blog, age }) => {
   const { type } = useTheme()
@@ -31,21 +33,11 @@ const HomePage: NextPage<HomePageProps> = ({ portfolio, blog, age }) => {
 
   const highlights = (
     <div style={{ marginTop: 25 }}>
-      <Tag type="warning" style={{ margin: 3 }}>
-        <b>React</b>
-      </Tag>
-      <Tag type="warning" style={{ margin: 3 }}>
-        <b>Swift</b>
-      </Tag>
-      <Tag type="warning" style={{ margin: 3 }}>
-        <b>NodeJS</b>
-      </Tag>
-      <Tag type="warning" style={{ margin: 3 }}>
-        <b>Firebase</b>
-      </Tag>
-      <Tag type="warning" style={{ margin: 3 }}>
-        <b>Designer</b>
-      </Tag>
+      {skills.map((skill) => (
+        <Tag key={skill} type="warning" style={{ margin: 3 }}>
+          <b>{skill}</b>
+        </Tag>
+      ))}
     </div>
   )
 

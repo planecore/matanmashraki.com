@@ -72,3 +72,8 @@ a {
   color: inherit;
   text-decoration: inherit;
 }
+
+code:before,
+code:after {
+  content: "​" !important;
+}
