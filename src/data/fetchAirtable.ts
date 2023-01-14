@@ -10,12 +10,17 @@ type Table = "Portfolio" | "Blog"
  * @param limit Get only n records from the table
  * @param compact Get only the preview of a record without its content
  */
-export default (table: Table, path?: string, limit?: number, compact: boolean = false) => {
+export default (
+  table: Table,
+  path?: string,
+  limit?: number,
+  compact: boolean = false
+) => {
   // convert parameters to Airtable API query
   const limitArg = limit ? `&maxRecords=${limit}` : ""
   const pathArg = path ? `&filterByFormula={Path} = '${path}'` : ""
   const compactArg = compact
-    ? `&fields[]=Title&fields[]=Description&fields[]=Attachments&fields[]=Path${
+    ? `&fields[]=Title&fields[]=Description&fields[]=Cover&fields[]=Path${
         table === "Blog" ? "&fields[]=Date" : ""
       }`
     : ""

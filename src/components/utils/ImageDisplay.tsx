@@ -1,10 +1,8 @@
 import React, { useEffect, useState, CSSProperties } from "react"
 import { Display, Image } from "@geist-ui/react"
-import Bowser from "bowser"
 
 type ImageDisplayProps = {
-  srcWebP: string
-  srcPNG: string
+  src: string
   alt: string
   style?: CSSProperties
   parentWidth: number
@@ -20,8 +18,7 @@ type Size = {
 
 /** Creates an image display with loading animation */
 const ImageDisplay = ({
-  srcWebP,
-  srcPNG,
+  src,
   alt,
   style,
   parentWidth,
@@ -45,18 +42,7 @@ const ImageDisplay = ({
     <div>
       {size.height && size.width && (
         <Display shadow style={style}>
-          <Image
-            alt={alt}
-            src={
-              Bowser.getParser(window.navigator.userAgent).satisfies({
-                safari: "<14",
-              })
-                ? srcPNG
-                : srcWebP
-            }
-            width={size.width}
-            height={size.height}
-          />
+          <Image alt={alt} src={src} width={size.width} height={size.height} />
         </Display>
       )}
     </div>

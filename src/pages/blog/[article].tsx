@@ -27,8 +27,6 @@ const BlogArticlePage: NextPage<BlogArticlePageProps> = ({ record }) => {
     }, 25)
   }, [])
 
-  const getImage = () => record.fields.Attachments.find((elem) => elem.filename === "Cover.webp")
-
   const createItem = (record: BlogRecord) => (
     <div style={{ textAlign: "center" }}>
       <ImageDisplay
@@ -36,16 +34,17 @@ const BlogArticlePage: NextPage<BlogArticlePageProps> = ({ record }) => {
         scale={0.9}
         alt={`${record.fields.Title} Cover`}
         parentWidth={windowWidth}
-        height={getImage().thumbnails.large.height}
-        width={getImage().thumbnails.large.width}
-        srcWebP={getImage().url}
-        srcPNG={getImage().thumbnails.large.url}
+        height={512}
+        width={766}
+        src={record.fields.Cover}
       />
       <Text type="secondary" style={{ marginBottom: -5 }}>
         {record.fields.Date}
       </Text>
       <h1>{record.fields.Title}</h1>
-      <h2 style={{ marginTop: -15, marginBottom: 50 }}>{record.fields.Description}</h2>
+      <h2 style={{ marginTop: -15, marginBottom: 50 }}>
+        {record.fields.Description}
+      </h2>
     </div>
   )
 
@@ -54,11 +53,15 @@ const BlogArticlePage: NextPage<BlogArticlePageProps> = ({ record }) => {
       <Head
         title={record.fields.Title}
         desc={record.fields.Description}
-        image={getImage().thumbnails.large.url}
+        image={record.fields.Cover}
       />
       <div style={{ opacity: showView ? 1 : 0 }}>
         <Link href="/blog">
-          <Button type="abort" icon={<ArrowLeft />} style={{ marginLeft: -22, marginRight: -22 }}>
+          <Button
+            type="abort"
+            icon={<ArrowLeft />}
+            style={{ marginLeft: -22, marginRight: -22 }}
+          >
             Back to Blog
           </Button>
         </Link>
@@ -80,18 +83,20 @@ const BlogArticlePage: NextPage<BlogArticlePageProps> = ({ record }) => {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => ({
-  paths: ((await fetchAirtable("Blog", undefined, undefined, true)) as CompactResponse).records.map(
-    (record) => ({
-      params: {
-        article: record.fields.Path,
-      },
-    })
-  ),
+  paths: (
+    (await fetchAirtable("Blog", undefined, undefined, true)) as CompactResponse
+  ).records.map((record) => ({
+    params: {
+      article: record.fields.Path,
+    },
+  })),
   fallback: true,
 })
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
-  const res = ((await fetchAirtable("Blog", ctx.params.article as string)) as BlogResponse).records
+  const res = (
+    (await fetchAirtable("Blog", ctx.params.article as string)) as BlogResponse
+  ).records
   return {
     props: {
       record: res && res[0] ? res[0] : null,

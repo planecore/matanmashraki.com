@@ -52,7 +52,7 @@ type CompactFields = {
   Title: string
   Description: string
   Path: string
-  Attachments: [Attachment]
+  Cover: string
   Date?: string
 }
 
@@ -67,25 +67,4 @@ type PortfolioRecordFields = {
 type BlogRecordFields = {
   Order: number
   Content: string
-}
-
-type Attachment = {
-  id: string
-  url: string
-  filename: string
-  size: number
-  type: string
-  thumbnails: Thumbnails
-}
-
-type Thumbnails = {
-  small: Thumbnail
-  large: Thumbnail
-  full: Thumbnail
-}
-
-type Thumbnail = {
-  url: string
-  width: number
-  height: number
 }

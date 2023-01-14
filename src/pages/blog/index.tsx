@@ -7,7 +7,6 @@ import ImageDisplay from "../../components/utils/ImageDisplay"
 import Head from "../../components/layout/Head"
 import fetchAirtable from "../../data/fetchAirtable"
 import { CompactResponse, CompactRecord } from "../../data/types"
-import getImageFor from "../../data/getImageFor"
 
 type BlogPageProps = {
   records: [CompactRecord]
@@ -30,16 +29,19 @@ const BlogPage: NextPage<BlogPageProps> = ({ records }) => {
         style={{ marginBottom: -25 }}
         alt={`${record.fields.Title} Cover`}
         parentWidth={300}
-        height={getImageFor(record).thumbnails.large.height}
-        width={getImageFor(record).thumbnails.large.width}
-        srcWebP={getImageFor(record).url}
-        srcPNG={getImageFor(record).thumbnails.large.url}
+        height={512}
+        width={766}
+        src={record.fields.Cover}
       />
       <Text h5 type="secondary">
         {record.fields.Date}
       </Text>
-      <h3 style={{ color: type === "light" ? "black" : "white" }}>{record.fields.Title}</h3>
-      <h5 style={{ color: type === "light" ? "black" : "white" }}>{record.fields.Description}</h5>
+      <h3 style={{ color: type === "light" ? "black" : "white" }}>
+        {record.fields.Title}
+      </h3>
+      <h5 style={{ color: type === "light" ? "black" : "white" }}>
+        {record.fields.Description}
+      </h5>
     </div>
   )
 
@@ -49,24 +51,31 @@ const BlogPage: NextPage<BlogPageProps> = ({ records }) => {
         <ImageDisplay
           alt={`${record.fields.Title} Cover`}
           parentWidth={375}
-          height={getImageFor(record).thumbnails.large.height}
-          width={getImageFor(record).thumbnails.large.width}
-          srcWebP={getImageFor(record).url}
-          srcPNG={getImageFor(record).thumbnails.large.url}
+          height={512}
+          width={766}
+          src={record.fields.Cover}
         />
       </Col>
       <Col span={20}>
         <Text h5 type="secondary">
           {record.fields.Date}
         </Text>
-        <h2 style={{ color: type === "light" ? "black" : "white" }}>{record.fields.Title}</h2>
-        <h3 style={{ color: type === "light" ? "black" : "white" }}>{record.fields.Description}</h3>
+        <h2 style={{ color: type === "light" ? "black" : "white" }}>
+          {record.fields.Title}
+        </h2>
+        <h3 style={{ color: type === "light" ? "black" : "white" }}>
+          {record.fields.Description}
+        </h3>
       </Col>
     </Row>
   )
 
   const createItem = (record: CompactRecord) => (
-    <Link key={record.id} as={`/blog/${record.fields.Path}`} href="/blog/[article]">
+    <Link
+      key={record.id}
+      as={`/blog/${record.fields.Path}`}
+      href="/blog/[article]"
+    >
       {windowWidth < 700 ? createSmallItem(record) : createBigItem(record)}
     </Link>
   )
@@ -74,7 +83,10 @@ const BlogPage: NextPage<BlogPageProps> = ({ records }) => {
   return (
     <>
       <Head title="Blog" />
-      <div className={windowWidth < 700 ? "grid" : ""} style={{ opacity: showView ? 1 : 0 }}>
+      <div
+        className={windowWidth < 700 ? "grid" : ""}
+        style={{ opacity: showView ? 1 : 0 }}
+      >
         {records.map((record) => createItem(record))}
       </div>
     </>
@@ -83,7 +95,14 @@ const BlogPage: NextPage<BlogPageProps> = ({ records }) => {
 
 export const getStaticProps: GetStaticProps = async () => ({
   props: {
-    records: ((await fetchAirtable("Blog", undefined, undefined, true)) as CompactResponse).records,
+    records: (
+      (await fetchAirtable(
+        "Blog",
+        undefined,
+        undefined,
+        true
+      )) as CompactResponse
+    ).records,
   },
   revalidate: 5,
 })

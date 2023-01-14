@@ -1,7 +1,6 @@
 import React from "react"
 import { Display, Description, Image, Button, Col, Row } from "@geist-ui/react"
 import Link from "../utils/Link"
-import getImageFor from "../../data/getImageFor"
 import { CompactRecord, CompactResponse } from "../../data/types"
 import { ArrowRight } from "@geist-ui/react-icons"
 
@@ -19,7 +18,11 @@ const PagesPreview = ({ title, response }: PagesPreviewProps) => {
    * @param index Used to add left margin for the first item
    */
   const createItem = (record: CompactRecord, index: number) => (
-    <Link key={record.id} as={`/${path}/${record.fields.Path}`} href={`/${path}/[article]`}>
+    <Link
+      key={record.id}
+      as={`/${path}/${record.fields.Path}`}
+      href={`/${path}/[article]`}
+    >
       <div
         style={{
           textAlign: "left",
@@ -34,12 +37,13 @@ const PagesPreview = ({ title, response }: PagesPreviewProps) => {
             width={250}
             height={167}
             alt={`${record.fields.Title} Cover`}
-            // TODO: Change to `getImageFor(record).url` after iOS 14
-            // gets significant market share.
-            src={getImageFor(record).thumbnails.large.url}
+            src={record.fields.Cover}
           />
         </Display>
-        <Description title={record.fields.Title} content={record.fields.Description} />
+        <Description
+          title={record.fields.Title}
+          content={record.fields.Description}
+        />
       </div>
     </Link>
   )
@@ -71,7 +75,9 @@ const PagesPreview = ({ title, response }: PagesPreviewProps) => {
           marginTop: -40,
         }}
       >
-        {response.records.map((record: CompactRecord, index: number) => createItem(record, index))}
+        {response.records.map((record: CompactRecord, index: number) =>
+          createItem(record, index)
+        )}
       </Row>
     </>
   )
